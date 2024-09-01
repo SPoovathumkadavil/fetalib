@@ -23,11 +23,11 @@ jobs:
       run: pip3 install codespell
 
     - name: Lint
-      run: cmake -D FORMAT_COMMAND=clang-format-14 -P cmake/lint.cmake
+      run: cmake -D FORMAT_COMMAND=clang-format-14 -P cmake/lint.cmake -D FIX=YES
 
     - name: Spell check
       if: always()
-      run: cmake -P cmake/spell.cmake FIX=YES
+      run: cmake -P cmake/spell.cmake -D FIX=YES
 
   coverage:
     needs: [lint]
