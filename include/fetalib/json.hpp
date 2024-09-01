@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <filesystem>
 
 namespace feta
 {
@@ -13,7 +14,6 @@ public:
   JsonReader(std::string file_name);
   std::string read_l1_entry(std::string key);
   std::vector<std::string> get_keys();
-  std::map<std::string, std::string> populate_map();
 
   std::string file_name();
 
