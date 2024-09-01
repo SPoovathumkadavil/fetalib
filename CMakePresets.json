@@ -26,7 +26,8 @@
       "hidden": true,
       "inherits": "cmake-pedantic",
       "cacheVariables": {
-        "fetalib_DEVELOPER_MODE": "ON"
+        "fetalib_DEVELOPER_MODE": "ON",
+        "BUILD_TESTING": "ON"
       }
     },
     {
