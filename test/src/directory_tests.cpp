@@ -13,6 +13,8 @@ TEST(DirTest, EnsureTestProjDirGetter)
 
 TEST(DirTest, EnsureNoTestThrowsWithIncorrectLoc)
 {
+  if (!std::filesystem::exists("test/resources/test.json"))
+    GTEST_SKIP() << "skipping test due to non-existant file";
   EXPECT_THROW({
     feta::directories fetadirs("test_project", "test/resources/test.json");
   }, std::invalid_argument);
@@ -21,6 +23,8 @@ TEST(DirTest, EnsureNoTestThrowsWithIncorrectLoc)
 TEST(DirTest, EnsureNoTestProjDirGetter)
 {
   feta::directories fetadirs("test_project");
+  if (!std::filesystem::exists(fetadirs.loc_file_location()))
+    GTEST_SKIP() << "skipping test due to non-existant file";
   feta::JsonReader reader(fetadirs.loc_file_location());
   auto pdir = fetadirs.proj_dirs();
   std::filesystem::path test_path = std::filesystem::path(reader.read_l1_entry("library")) / std::filesystem::path(fetadirs.project_name());
