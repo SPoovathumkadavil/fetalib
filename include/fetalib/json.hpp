@@ -5,10 +5,12 @@
 #include <map>
 #include <filesystem>
 
+#include "fetalib/fetalib_export.hpp"
+
 namespace feta
 {
 
-class JsonReader
+class FETALIB_EXPORT JsonReader
 {
 public:
   JsonReader(std::string file_name);
