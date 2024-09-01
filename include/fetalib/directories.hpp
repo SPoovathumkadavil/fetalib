@@ -99,13 +99,13 @@ public:
    * @brief Returns the home directory of the user.
    * @return string path
    */
-  std::filesystem::path get_home_dir();
+  static std::filesystem::path get_home_dir();
   /**
    * @brief Get current working directory, this is the directory where the
    * executable is run from.
    * @return string path
    */
-  std::filesystem::path get_cwd();
+  static std::filesystem::path get_cwd();
   /**
    * @brief Returns whether or not using test dir values.
    */

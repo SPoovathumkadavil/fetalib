@@ -22,9 +22,9 @@ TEST(DirTest, EnsureNoTestThrowsWithIncorrectLoc)
 
 TEST(DirTest, EnsureNoTestProjDirGetter)
 {
-  feta::directories fetadirs("test_project");
-  if (!std::filesystem::exists(fetadirs.loc_file_location()))
+  if (!std::filesystem::exists(feta::directories::get_home_dir() / std::filesystem::path(".loc.json")))
     GTEST_SKIP() << "skipping test due to non-existant file";
+  feta::directories fetadirs("test_project");
   feta::JsonReader reader(fetadirs.loc_file_location());
   auto pdir = fetadirs.proj_dirs();
   std::filesystem::path test_path = std::filesystem::path(reader.read_l1_entry("library")) / std::filesystem::path(fetadirs.project_name());
