@@ -27,7 +27,7 @@ jobs:
 
     - name: Spell check
       if: always()
-      run: cmake -P -D FIX=YES cmake/spell.cmake
+      run: cmake -D FIX=YES -P cmake/spell.cmake
 
   coverage:
     needs: [lint]
