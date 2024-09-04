@@ -16,7 +16,9 @@ add_executable(fetalib_test ${fetalib_test_sources})
 target_link_libraries(fetalib_test 
   PRIVATE
   GTest::gtest_main
-  fetalib::fetalib)
+  fetalib::common
+  fetalib::files
+  fetalib::cli)
 target_compile_features(fetalib_test PRIVATE cxx_std_17)
 
 include(GoogleTest)

@@ -5,7 +5,7 @@
 #include <map>
 #include <filesystem>
 
-#include "fetalib/fetalib_export.hpp"
+#include "fetalib/common/fetalib_export.hpp"
 
 namespace feta
 {

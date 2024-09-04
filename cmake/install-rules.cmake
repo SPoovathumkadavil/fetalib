@@ -21,7 +21,7 @@ install(
 )
 
 install(
-    TARGETS fetalib_fetalib
+    TARGETS fetalib_common fetalib_files fetalib_cli
     EXPORT fetalibTargets
     RUNTIME #
     COMPONENT fetalib_Runtime

@@ -1,7 +1,7 @@
 
 #include <fstream>
 
-#include "fetalib/json.hpp"
+#include "fetalib/common/json.hpp"
 
 namespace feta
 {

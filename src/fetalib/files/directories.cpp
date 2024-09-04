@@ -1,13 +1,12 @@
 
 #include <filesystem>
 
-#include "fetalib/directories.hpp"
-
 #include <pwd.h>
 #include <unistd.h>
 #include <algorithm>
 
-#include "fetalib/json.hpp"
+#include "fetalib/files/directories.hpp"
+#include "fetalib/common/json.hpp"
 
 namespace feta
 {

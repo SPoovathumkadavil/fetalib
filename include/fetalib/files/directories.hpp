@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-#include "fetalib/fetalib_export.hpp"
+#include "fetalib/files/fetalib_export.hpp"
 
 /**
  * A note about the MSVC warning C4251:

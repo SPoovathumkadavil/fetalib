@@ -1,5 +1,5 @@
-#include <fetalib/directories.hpp>
-#include <fetalib/json.hpp>
+#include <fetalib/files/directories.hpp>
+#include <fetalib/common/json.hpp>
 #include <gtest/gtest.h>
 #include <map>
 #include <filesystem>

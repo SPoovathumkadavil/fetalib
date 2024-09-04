@@ -1,5 +1,5 @@
 
-#include <fetalib/json.hpp>
+#include <fetalib/common/json.hpp>
 #include <gtest/gtest.h>
 #include <map>
 
