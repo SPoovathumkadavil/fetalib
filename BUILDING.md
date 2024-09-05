@@ -62,17 +62,26 @@ This project exports a CMake package to be used with the [`find_package`][3]
 command of CMake:
 
 * Package name: `fetalib`
-* Target name: `fetalib::fetalib`
+* Target name: `fetalib::common`, `fetalib::files`, `fetalib::cli`
 
 Example usage:
 
 ```cmake
-find_package(fetalib REQUIRED)
+# find_package(fetalib REQUIRED)
+# or
+include(FetchContent)
+FetchContent_Declare(
+    GIT https://github.com/SPoovathumkadavil/fetalib
+    GIT_TAG vX.X.X
+)
+FetchContent_MakeAvailable(fetalib)
 # Declare the imported target as a build requirement using PRIVATE, where
 # project_target is a target created in the consuming project
 target_link_libraries(
     project_target PRIVATE
-    fetalib::fetalib
+    fetalib::files
+    fetalib::common
+    fetalib::cli
 )
 ```
 
