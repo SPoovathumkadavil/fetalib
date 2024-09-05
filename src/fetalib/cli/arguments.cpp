@@ -1,8 +1,8 @@
 
 #include <type_traits>
+#include <stdexcept>
 
 #include "fetalib/cli/arguments.hpp"
-
 #include "fetalib/common/util.hpp"
 
 namespace feta
