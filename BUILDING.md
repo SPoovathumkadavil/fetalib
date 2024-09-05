@@ -71,7 +71,7 @@ Example usage:
 # or
 include(FetchContent)
 FetchContent_Declare(
-    GIT https://github.com/SPoovathumkadavil/fetalib
+    GIT_REPOSITORY https://github.com/SPoovathumkadavil/fetalib
     GIT_TAG vX.X.X
 )
 FetchContent_MakeAvailable(fetalib)
