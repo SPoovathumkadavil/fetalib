@@ -18,12 +18,13 @@ struct FETALIB_EXPORT Argument
   int _word_count; // -1 means indefinite, 1 is default
 };
 
+/**
+ * @brief argument parsers can be used group by group.
+*/
 class FETALIB_EXPORT ArgumentParser
 {
 public:
-  ArgumentParser(int argc, char **argv) : _argc {argc} {
-    for (int i = 0; i < argc; i++) _argv.push_back(std::string(argv[i]));
-  };
+  ArgumentParser(int argc, char **argv);
 
   void add_option(std::string key,
                   std::string key_alternate = "",
@@ -44,8 +45,6 @@ public:
 
   template<typename T, int N>
   T get(std::string key);
-
-  std::string get_help_string();
 
 private:
   int _argc;

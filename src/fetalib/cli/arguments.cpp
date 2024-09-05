@@ -8,6 +8,13 @@
 namespace feta
 {
 
+ArgumentParser::ArgumentParser(int argc, char** argv)
+    : _argc {argc}
+{
+  for (int i = 0; i < argc; i++)
+    _argv.push_back(std::string(argv[i]));
+}
+
 void ArgumentParser::add_option(std::string key,
                                 std::string key_alternate,
                                 std::string help_message,
