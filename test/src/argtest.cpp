@@ -1,56 +1,79 @@
 
-#include <fetalib/common/util.hpp>
-#include <fetalib/cli/arguments.hpp>
 #include <string>
 #include <vector>
-#include <stdio.h>
+
+#include <fetalib/cli/arguments.hpp>
+#include <fetalib/common/util.hpp>
 #include <gtest/gtest.h>
+#include <stdio.h>
 
-TEST(ArgTest, EnsureArgumentFindKey)
+TEST(ArgTest, EnsureArgVCorrectlyTranscribed)
 {
-  char* argv[] = {"-a", "testa", "-b", "testb"};
-  feta::ArgumentParser argparser(4, argv);
-  argparser.add_option("-a");
-  argparser.add_option("-b");
-  ASSERT_TRUE(argparser.arg_exists("-a"));
+  char* argv[] = {"-a", "testa"};
+  feta::ArgumentParser argparser(2, argv);
+  ASSERT_TRUE(argparser.get_argc() == 2 && argparser.get_argv()->size() == 2);
 }
 
-TEST(ArgTest, EnsureArgumentGetKeyVal)
+TEST(ArgTest, EnsureArgExists)
 {
-  char* argv[] = {"-a", "testa", "-b", "testb"};
-  feta::ArgumentParser argparser(4, argv);
-  argparser.add_option("-a");
-  argparser.add_option("-b");
-  std::string str = argparser.get_vec_val("-a")[0];
-  ASSERT_EQ(str, std::string("testa"));
+  char* argv[] = {"-a", "testa"};
+  feta::ArgumentParser argparser(2, argv);
+  argparser.add_option("-a", "--aha");
+  ASSERT_TRUE(argparser.arg_exists("-a") && argparser.arg_exists("--aha"));
 }
 
-TEST(CommonTest, EnsureVecSubstring)
+TEST(ArgTest, EnsureArgValue)
 {
-  std::vector<std::string> vec;
-  vec.push_back("hehe");
-  vec.push_back("hehe");
-  vec.push_back("hehe");
-  vec.push_back("hehe");
-  vec.push_back("hehe");
-  int s1 = vec.size();
-  vec = feta::util::vec_substring(vec, 2, 3);
-  int s2 = vec.size();
-  ASSERT_TRUE(s2 > 0);
+  char* argv[] = {"-a", "testa"};
+  feta::ArgumentParser argparser(2, argv);
+  argparser.add_option("-a", "--aha");
+  feta::Argument arg = argparser.get_arg("-a");
+  ASSERT_TRUE(arg.key == std::string("-a")
+              && arg.alternate_key == std::string("--aha"));
 }
 
-TEST(ArgTest, EnsureArgV) {
-  std::printf("\nTEST OUTPUT\n");
-  char* argv[] = {"-a", "testa", "-b", "testb"};
-  feta::ArgumentParser argparser(4, argv);
-  for (std::string str : argparser._argv) {
-    std::printf("%s\n", str.c_str());
-  }
-  std::printf("\n\t- vecsub argv:\n");
-  // std::vector<std::string>  argvstr = feta::util::vec_substring(argparser._argv, 0+1, 0+1+1);
-  // for (std::string str : argvstr) {
-  //   std::printf("%s\n", str.c_str());
-  // }
-  std::printf("%s\n", feta::util::join(feta::util::vec_substring(argparser._argv, 0+1, 0+1+1), " ").c_str());
-  std::printf("-----------\n");
+TEST(ArgTest, EnsureGetVecVal)
+{
+  char* argv[] = {"-a", "testa"};
+  feta::ArgumentParser argparser(2, argv);
+  argparser.add_option("-a", "--aha");
+  std::vector<std::string> arg =
+      argparser.get_val<std::vector<std::string>>("-a");
+  ASSERT_TRUE(arg[0] == std::string("testa"));
+}
+
+TEST(ArgTest, EnsureGetStrVal)
+{
+  char* argv[] = {"-a", "testa"};
+  feta::ArgumentParser argparser(2, argv);
+  argparser.add_option("-a", "--aha");
+  std::string arg = argparser.get_val<std::string>("-a");
+  ASSERT_TRUE(arg == std::string("testa"));
+}
+
+TEST(ArgTest, EnsureGetIntVal)
+{
+  char* argv[] = {"--aha", "12"};
+  feta::ArgumentParser argparser(2, argv);
+  argparser.add_option("-a", "--aha");
+  int arg = argparser.get_val<int>("-a");
+  ASSERT_TRUE(arg == 12);
+}
+
+TEST(ArgTest, EnsureGetBoolVal)
+{
+  char* argv[] = {"--aha", "true"};
+  feta::ArgumentParser argparser(2, argv);
+  argparser.add_option("-a", "--aha");
+  bool arg = argparser.get_val<bool>("-a");
+  ASSERT_TRUE(arg);
+}
+
+TEST(ArgTest, EnsureGetFlagVal)
+{
+  char* argv[] = {"--aha"};
+  feta::ArgumentParser argparser(1, argv);
+  argparser.add_option("-a", "--aha", "", true);
+  bool arg = argparser.get_val<bool>("-a");
+  ASSERT_TRUE(arg);
 }
