@@ -1,8 +1,10 @@
 
-#include <type_traits>
 #include <stdexcept>
+#include <type_traits>
+#include <stdio.h>
 
 #include "fetalib/cli/arguments.hpp"
+
 #include "fetalib/common/util.hpp"
 
 namespace feta
@@ -54,53 +56,65 @@ bool ArgumentParser::arg_exists(std::string key)
   return e;
 }
 
-template<typename T>
-T ArgumentParser::get(std::string key)
+std::vector<std::string> ArgumentParser::get_vec_val(std::string key)
 {
   Argument* arg = get_arg(key);
-  if (arg == nullptr)
+  if (arg == nullptr)  // ensure arg exists
     throw std::invalid_argument("argument does not exist.");
 
   for (int i = 0; i < _argv.size(); i++) {
-    if (_argv[i] == arg->_key || _argv[i] == arg->_key_alternate) {
-      // flag boolean return
-      if (arg->_is_flag) {
-        if (!std::is_same<T, bool>::value) {
-          throw std::invalid_argument("flags represent boolean values.");
-        } else {
-          return true;
-        }
-      }
-
-      // regular value return
-      // "word count" defines approximately how many words to take for the
-      // value of the argument. if = -1, then take the rest of the argv as
-      // values.
-      if (i + 1 + (arg->_word_count) < _argc) {
-        if (arg->_word_count == -1) {
-          return convert_to<T>(
-              join(vec_substring(_argv, i + 1, _argv.size()), " "));
-        } else {
-          return convert_to<T>(
-              join(vec_substring(_argv, i + 1, i + 1 + arg->_word_count), " "));
-        }
+    if ((std::string(_argv[i]) == std::string(arg->_key)) || (std::string(_argv[i]) == std::string(arg->_key_alternate))) {
+      if (arg->_word_count == -1) {
+        return util::vec_substring(_argv, i + 1);
       } else {
-        throw std::invalid_argument("no value given for argument.");
+        if (i + 1 + arg->_word_count > _argv.size()) {
+          throw std::invalid_argument("no value given for argument.");
+        }
+        return util::vec_substring(_argv, i + 1, i + 1 + arg->_word_count);
       }
     }
   }
 
-  // flag false return
-  if (arg->_is_flag) {
-    if (!std::is_same<T, bool>::value) {
-      throw std::invalid_argument("flags represent boolean values.");
-    } else {
-      return false;
-    }
-  }
+  throw std::invalid_argument("no value given for argument.");
+}
 
-  // should never get here.
-  throw std::invalid_argument("unexpected error.");
+std::string ArgumentParser::get_str_val(std::string key)
+{
+  return util::join(get_vec_val(key), " ");
+}
+
+int ArgumentParser::get_int_val(std::string key)
+{
+  Argument* arg = get_arg(key);
+  if (arg == nullptr)  // ensure arg exists
+    throw std::invalid_argument("argument does not exist.");
+  if (arg->_word_count != 1)
+    throw std::invalid_argument(
+        "integer arguments require a single word value.");
+  return std::stoi(get_str_val(key));
+}
+
+float ArgumentParser::get_float_val(std::string key)
+{
+  Argument* arg = get_arg(key);
+  if (arg == nullptr)  // ensure arg exists
+    throw std::invalid_argument("argument does not exist.");
+  if (arg->_word_count != 1)
+    throw std::invalid_argument("float arguments require a single word value.");
+  return std::stof(get_str_val(key));
+}
+
+bool ArgumentParser::get_bool_val(std::string key)
+{
+  Argument* arg = get_arg(key);
+  if (arg == nullptr)  // ensure arg exists
+    throw std::invalid_argument("argument does not exist.");
+  if (arg->_is_flag)
+    return true;
+  if (arg->_word_count != 1)
+    throw std::invalid_argument(
+        "non-flag boolean arguments require a single word value.");
+  return get_str_val(key) == "true";
 }
 
 }  // namespace feta

@@ -3,16 +3,18 @@
 #include <string>
 #include <vector>
 
+#include "fetalib/common/fetalib_export.hpp"
+
 namespace feta
 {
 
-template<typename T>
-T convert_to(const std::string& str);
+struct FETALIB_EXPORT util {
 
-template<typename T>
-std::vector<T> vec_substring(std::vector<T> vec, int a, int b);
+  static std::vector<std::string> vec_substring(std::vector<std::string> vec, int a);
+  static std::vector<std::string> vec_substring(std::vector<std::string> vec, int a, int b);
+  static std::string join(const std::vector<std::string> strings, std::string delim);
+  static std::string implode(const std::vector<std::string> strings, std::string delim, std::string s);
 
-std::string join(const std::vector<std::string>& strings, std::string delim);
-std::string& implode(const std::vector<std::string>& strings, std::string delim, std::string& s);
+};
 
 }  // namespace feta

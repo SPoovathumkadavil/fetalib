@@ -18,7 +18,8 @@ target_link_libraries(fetalib_test
   GTest::gtest_main
   fetalib::common
   fetalib::files
-  fetalib::cli)
+  fetalib::cli
+)
 target_compile_features(fetalib_test PRIVATE cxx_std_17)
 
 include(GoogleTest)
