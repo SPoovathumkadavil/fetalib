@@ -8,6 +8,12 @@
 namespace feta
 {
 
+struct FETALIB_EXPORT Validation
+{
+  bool valid;
+  std::string detail;
+};
+
 struct FETALIB_EXPORT util {
 
   static std::vector<std::string> vec_substring(std::vector<std::string> vec, int a);

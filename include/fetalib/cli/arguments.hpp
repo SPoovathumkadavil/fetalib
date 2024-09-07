@@ -106,6 +106,8 @@ public:
     throw std::invalid_argument("no value given for argument.");
   }
 
+  Validation validate();
+
 private:
   int argc;
   std::vector<std::string> argv;

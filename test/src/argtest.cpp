@@ -77,3 +77,29 @@ TEST(ArgTest, EnsureGetFlagVal)
   bool arg = argparser.get<bool>("-a");
   ASSERT_TRUE(arg);
 }
+
+TEST(ArgTest, EnsureArgvMultiDefValidation)
+{
+  char* argv[] = {"--aha", "testa", "-a"};
+  feta::ArgumentParser argparser(3, argv);
+  argparser.add_option("-a", "--aha");
+  ASSERT_FALSE(argparser.validate().valid);
+}
+
+TEST(ArgTest, EnsureArgvNoValueValidation)
+{
+  char* argv[] = {"--aha", "-b", "testb"};
+  feta::ArgumentParser argparser(3, argv);
+  argparser.add_option("-a", "--aha");
+  argparser.add_option("-b");
+  ASSERT_FALSE(argparser.validate().valid);
+}
+
+TEST(ArgTest, EnsureArgvGoodValidation)
+{
+  char* argv[] = {"--aha", "testa", "-b", "testb"};
+  feta::ArgumentParser argparser(4, argv);
+  argparser.add_option("-a", "--aha");
+  argparser.add_option("-b");
+  ASSERT_TRUE(argparser.validate().valid);
+}
