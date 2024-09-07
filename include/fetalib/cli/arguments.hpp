@@ -48,13 +48,13 @@ public:
   Argument get_arg(std::string key);
 
   template<typename T>
-  T get_val(std::string key)
+  T get(std::string key)
   {
     throw std::invalid_argument(
         "unknown return value for fetalib::ArgumentParser::get_val.");
   }
   template<>
-  std::vector<std::string> get_val<std::vector<std::string>>(std::string key)
+  std::vector<std::string> get<std::vector<std::string>>(std::string key)
   {
     Argument arg = get_arg(key);
 
@@ -76,17 +76,17 @@ public:
     throw std::invalid_argument("no value given for argument.");
   }
   template<>
-  std::string get_val<std::string>(std::string key)
+  std::string get<std::string>(std::string key)
   {
-    return util::join(get_val<std::vector<std::string>>(key), " ");
+    return util::join(get<std::vector<std::string>>(key), " ");
   }
   template<>
-  int get_val<int>(std::string key)
+  int get<int>(std::string key)
   {
-    return std::stoi(get_val<std::string>(key));
+    return std::stoi(get<std::string>(key));
   }
   template<>
-  bool get_val<bool>(std::string key)
+  bool get<bool>(std::string key)
   {
     Argument arg = get_arg(key);
 
