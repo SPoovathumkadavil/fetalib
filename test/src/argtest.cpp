@@ -27,7 +27,7 @@ TEST(ArgTest, EnsureArgValue)
   char* argv[] = {"-a", "testa"};
   feta::ArgumentParser argparser(2, argv);
   argparser.add_option("-a", "--aha");
-  feta::Argument arg = argparser.get_arg("-a");
+  feta::detail::Argument arg = argparser.get_arg("-a");
   ASSERT_TRUE(arg.key == std::string("-a")
               && arg.alternate_key == std::string("--aha"));
 }

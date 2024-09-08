@@ -7,7 +7,7 @@ void feta::ArgumentParser::add_option(std::string key,
                                       bool is_flag,
                                       int word_count)
 {
-  feta::Argument arg = {
+  feta::detail::Argument arg = {
       key, alternate_key, help_message, is_flag, true, word_count};
   args.push_back(arg);
 }
@@ -18,14 +18,14 @@ void feta::ArgumentParser::add_required(std::string key,
                                         bool is_flag,
                                         int word_count)
 {
-  feta::Argument arg = {
+  feta::detail::Argument arg = {
       key, alternate_key, help_message, is_flag, false, word_count};
   args.push_back(arg);
 }
 
 bool feta::ArgumentParser::arg_exists(std::string key)
 {
-  for (feta::Argument arg : args) {
+  for (feta::detail::Argument arg : args) {
     if (arg.key == key || arg.alternate_key == key) {
       return true;
     }
@@ -33,9 +33,9 @@ bool feta::ArgumentParser::arg_exists(std::string key)
   return false;
 }
 
-feta::Argument feta::ArgumentParser::get_arg(std::string key)
+feta::detail::Argument feta::ArgumentParser::get_arg(std::string key)
 {
-  for (feta::Argument arg : args) {
+  for (feta::detail::Argument arg : args) {
     if (arg.key == key || arg.alternate_key == key) {
       return arg;
     }
@@ -46,7 +46,7 @@ feta::Argument feta::ArgumentParser::get_arg(std::string key)
 feta::Validation feta::ArgumentParser::validate()
 {
   // ensure all required values accounted for.
-  for (Argument arg : args) {
+  for (feta::detail::Argument arg : args) {
     if (!arg.is_optional) {
       bool found = false;
       for (std::string str : argv) {
@@ -69,7 +69,7 @@ feta::Validation feta::ArgumentParser::validate()
       if (last_arg) {
         return Validation {false, "argument not provided a value."};
       }
-      Argument arg = get_arg(argv[i]);
+      feta::detail::Argument arg = get_arg(argv[i]);
       if (!arg.is_flag) {
         if (i == argv.size() - 1)
           return Validation {false, "argument not provided a value."};

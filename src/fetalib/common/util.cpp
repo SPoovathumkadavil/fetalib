@@ -7,17 +7,17 @@
 namespace feta
 {
 
-std::vector<std::string> util::vec_substring(std::vector<std::string> vec, int a)
+std::vector<std::string> util::vec_substring(std::vector<std::string> *vec, int a)
 {
-  return vec_substring(vec, a, vec.size());
+  return vec_substring(vec, a, vec->size());
 }
 
-std::vector<std::string> util::vec_substring(std::vector<std::string> vec, int a, int b)
+std::vector<std::string> util::vec_substring(std::vector<std::string> *vec, int a, int b)
 {
   std::vector<std::string> ret;
   for (int c = a; c < b; c++) {
     if (c + 1 <= b)
-      ret.push_back(vec[c]);
+      ret.push_back(vec->at(c));
   }
   return ret;
 }

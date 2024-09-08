@@ -13,7 +13,7 @@ TEST(CommonTest, EnsureVecSubst)
   vec.push_back("hehe");
   vec.push_back("hehe");
   int s1 = vec.size();
-  vec = feta::util::vec_substring(vec, 2, 3);
+  vec = feta::util::vec_substring(&vec, 2, 3);
   int s2 = vec.size();
   ASSERT_TRUE(s2 > 0);
 }
@@ -26,6 +26,6 @@ TEST(CommonTest, EnsureJoinVecSubst) {
   vec.push_back("hehe");
   vec.push_back("hehe");
   int s1 = vec.size();
-  std::string vstr = feta::util::join(feta::util::vec_substring(vec, 2, 4), " ");
+  std::string vstr = feta::util::join(feta::util::vec_substring(&vec, 2, 4), " ");
   ASSERT_EQ(vstr, std::string("hehe hehe"));
 }
