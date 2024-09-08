@@ -1,4 +1,6 @@
 
+#include <stdexcept>
+
 #include "fetalib/cli/arguments.hpp"
 
 void feta::ArgumentParser::add_option(std::string key,
