@@ -57,30 +57,41 @@
             <li>
               Reference
               <ul>
+                <li><a href="#namespaces">Namespaces</a></li>
                 <li><a href="#nested-classes">Classes</a></li>
-                <li><a href="#func-members">Functions</a></li>
               </ul>
             </li>
           </ul>
         </div>
 <p>A note about the MSVC warning C4251: This warning should be suppressed for private data members of the project&#x27;s exported classes, because there are too many ways to work around it and all involve some kind of trade-off (increased code complexity requiring more developer time, writing boilerplate code, longer compile times), but those solutions are very situational and solve things in slightly different ways, depending on the requirements of the project. That is to say, there is no general solution.</p><p>What can be done instead is understand where issues could arise where this warning is spotting a legitimate bug. I will give the general description of this warning&#x27;s cause and break it down to make it trivial to understand.</p><p>C4251 is emitted when an exported class has a non-static data member of a non-exported class type.</p><p>The exported class in our case is the class below (exported_class), which has a non-static data member (m_name) of a non-exported class type (std::string).</p><p>The rationale here is that the user of the exported class could attempt to access (directly, or via an inline member function) a static data member or a non-inline member function of the data member, resulting in a linker error. Inline member function above means member functions that are defined (not declared) in the class definition.</p><p>Since this exported class never makes these non-exported types available to the user, we can safely ignore this warning. It&#x27;s fine if there are non-exported class types as private member variables, because they are only accessed by the members of the exported class itself.</p><p>The name() method below returns a pointer to the stored null-terminated string as a fundamental type (char const), so this is safe to use anywhere. The only downside is that you can have dangling pointers if the pointer outlives the class instance which stored the string.</p><p>Shared libraries are not easy, they need some discipline to get right, but they also solve some other problems that make them worth the time invested.</p>
+        <section id="namespaces">
+          <h2><a href="#namespaces">Namespaces</a></h2>
+          <dl class="m-doc">
+            <dt>namespace <a href="namespacefeta_1_1detail.html" class="m-doc">detail</a></dt>
+            <dd><span></span></dd>
+          </dl>
+        </section>
         <section id="nested-classes">
           <h2><a href="#nested-classes">Classes</a></h2>
           <dl class="m-doc">
             <dt>
-              struct <a href="structfeta_1_1Argument.html" class="m-doc">Argument</a>
-            </dt>
-            <dd><span></span></dd>
-            <dt>
               class <a href="classfeta_1_1ArgumentParser.html" class="m-doc">ArgumentParser</a>
             </dt>
-            <dd>argument parsers can be used group by group.</dd>
+            <dd><span></span></dd>
             <dt>
               class <a href="classfeta_1_1color.html" class="m-doc">color</a>
             </dt>
             <dd><span></span></dd>
             <dt>
               class <a href="classfeta_1_1JsonReader.html" class="m-doc">JsonReader</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              struct <a href="structfeta_1_1Validation.html" class="m-doc">Validation</a>
+            </dt>
+            <dd><span></span></dd>
+            <dt>
+              struct <a href="structfeta_1_1util.html" class="m-doc">util</a>
             </dt>
             <dd><span></span></dd>
             <dt>
@@ -96,76 +107,6 @@
             </dt>
             <dd>methods for interacting with the feta-framework directory structure. (+utilities)</dd>
           </dl>
-        </section>
-        <section id="func-members">
-          <h2><a href="#func-members">Functions</a></h2>
-          <dl class="m-doc">
-            <dt>
-              <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#af184a5ba6e30217eb1b0d05582052951" class="m-doc">convert_to</a>(</span><span class="m-doc-wrap">const std::string&amp; str) -&gt; T</span>
-            </dt>
-            <dd><span></span></dd>
-            <dt>
-              <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a9621fb2ac7e355cb3846452a3e2f0038" class="m-doc">vec_substring</a>(</span><span class="m-doc-wrap">std::vector&lt;T&gt; vec,
-              int a,
-              int b) -&gt; std::vector&lt;T&gt;</span>
-            </dt>
-            <dd><span></span></dd>
-            <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#acc7680380b6039cc7154824cb78772dd" class="m-doc">join</a>(</span><span class="m-doc-wrap">const std::vector&lt;std::string&gt;&amp; strings,
-              std::string delim) -&gt; std::string</span>
-            </dt>
-            <dd><span></span></dd>
-            <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#afdf3b56486d88169d2fbf75f15911d14" class="m-doc">implode</a>(</span><span class="m-doc-wrap">const std::vector&lt;std::string&gt;&amp; strings,
-              std::string delim,
-              std::string&amp; s) -&gt; std::string&amp;</span>
-            </dt>
-            <dd><span></span></dd>
-          </dl>
-        </section>
-        <section>
-          <h2>Function documentation</h2>
-          <section class="m-doc-details" id="af184a5ba6e30217eb1b0d05582052951"><div>
-            <h3>
-              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="util_8hpp.html">&lt;fetalib/common/util.hpp&gt;</a></div>
-              <div class="m-doc-template">
-                template&lt;typename T&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">T feta::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af184a5ba6e30217eb1b0d05582052951" class="m-doc-self">convert_to</a>(</span><span class="m-doc-wrap">const std::string&amp; str)</span></span>
-            </h3>
-            <p><span></span></p>
-          </div></section>
-          <section class="m-doc-details" id="a9621fb2ac7e355cb3846452a3e2f0038"><div>
-            <h3>
-              <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="util_8hpp.html">&lt;fetalib/common/util.hpp&gt;</a></div>
-              <div class="m-doc-template">
-                template&lt;typename T&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">std::vector&lt;T&gt; feta::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a9621fb2ac7e355cb3846452a3e2f0038" class="m-doc-self">vec_substring</a>(</span><span class="m-doc-wrap">std::vector&lt;T&gt; vec,
-              int a,
-              int b)</span></span>
-            </h3>
-            <p><span></span></p>
-          </div></section>
-          <section class="m-doc-details" id="acc7680380b6039cc7154824cb78772dd"><div>
-            <h3>
-              <span class="m-doc-wrap-bumper">std::string feta::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#acc7680380b6039cc7154824cb78772dd" class="m-doc-self">join</a>(</span><span class="m-doc-wrap">const std::vector&lt;std::string&gt;&amp; strings,
-              std::string delim)</span></span>
-              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="util_8hpp.html">&lt;fetalib/common/util.hpp&gt;</a></div>
-            </h3>
-            <p><span></span></p>
-          </div></section>
-          <section class="m-doc-details" id="afdf3b56486d88169d2fbf75f15911d14"><div>
-            <h3>
-              <span class="m-doc-wrap-bumper">std::string&amp; feta::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afdf3b56486d88169d2fbf75f15911d14" class="m-doc-self">implode</a>(</span><span class="m-doc-wrap">const std::vector&lt;std::string&gt;&amp; strings,
-              std::string delim,
-              std::string&amp; s)</span></span>
-              <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="util_8hpp.html">&lt;fetalib/common/util.hpp&gt;</a></div>
-            </h3>
-            <p><span></span></p>
-          </div></section>
         </section>
       </div>
     </div>
