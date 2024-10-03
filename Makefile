@@ -107,11 +107,11 @@ help:
 	echo "  uninstall - Uninstall the library"
 	echo "  help  - Display this help message"
 
-TARGET_LIB = $(HOME)/dev/.library
-TARGET_CONF = $(HOME)/dev/.config
-TARGET_BIN = $(HOME)/dev/.bin 
-TARGET_SCRIPTS = $(HOME)/dev/.scripts 
-TARGET_WORK = $(HOME)/dev/workspace
+TARGET_LIB = $(HOME)/.local/library
+TARGET_CONF = $(HOME)/.local/config
+TARGET_BIN = $(HOME)/.local/bin 
+TARGET_SCRIPTS = $(HOME)/.local/scripts 
+TARGET_WORK = $(HOME)/devel
 
 .PHONY: loc
 loc:
