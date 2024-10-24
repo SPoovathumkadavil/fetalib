@@ -11,7 +11,7 @@ enum Color {
   PURPLE=95,
   CYAN=96,
   DARK_CYAN=36,
-  BLUE=92,
+  BLUE=94,
   YELLOW=93,
   GREEN=92
 };
