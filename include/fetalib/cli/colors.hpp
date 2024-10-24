@@ -12,11 +12,12 @@ enum Color {
   CYAN=96,
   DARK_CYAN=36,
   BLUE=92,
-  YELLOW=93
+  YELLOW=93,
+  GREEN=92
 };
 
 static std::string colorize(std::string text, Color c) {
-  return "\033[" + c + "m" + text + "\033[0m";
+  return std::string("\033[").append(std::to_string(c)).append("m").append(text).append("\033[0m");
 };
 
 }  // namespace feta
