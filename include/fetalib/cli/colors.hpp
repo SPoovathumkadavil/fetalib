@@ -2,22 +2,21 @@
 
 #include <string>
 
-#include <unistd.h>
-
 #include "fetalib/cli/fetalib_export.hpp"
 
 namespace feta
 {
-class color
-{
-public:
-  static const uint32_t beige = 0xC7AE8C;
-  static const uint32_t red = 0xDA7167;
-  static const uint32_t purple = 0xC8748A;
-  static const uint32_t cyan = 0x8CAB82;
-  static const uint32_t blue = 0x689F94;
-  static const uint32_t green = 0x97A65F;
-  static const uint32_t yellow = 0xCE9554;
-};  // namespace color
+enum Color {
+  RED=31,
+  PURPLE=95,
+  CYAN=96,
+  DARK_CYAN=36,
+  BLUE=92,
+  YELLOW=93
+};
+
+static std::string colorize(std::string text, Color c) {
+  return "\033[" + c + "m" + text + "\033[0m";
+};
 
 }  // namespace feta
