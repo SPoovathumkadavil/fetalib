@@ -14,10 +14,17 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v4
-      with: { persist-credentials: false }
-      env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+    - name: Generate Token
+      id: generate-token
+      uses: actions/create-github-app-token@v1
+      with:
+        app-id: ${{ secrets.APP_ID }}
+        private-key: ${{ secrets.APP_KEY }}
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ steps.generate-token.outputs.token }}
 
     - uses: actions/setup-python@v5
       with: { python-version: "3.12" }
@@ -35,6 +42,8 @@ jobs:
     - name: Commit
       continue-on-error: true
       id: commit
+      env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
       run: |
         git config --global user.name "Sal"
         git config --global user.email "spoovathumkadavil16@claytonschools.net"
@@ -43,6 +52,8 @@ jobs:
     
     - name: Push
       if: ${{ steps.commit.outcome == 'success' }}
+      env:
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
       run: |
         git push
         return 1
