@@ -1,7 +1,8 @@
 
-#include <fetalib/common/util.hpp>
 #include <string>
 #include <vector>
+
+#include <fetalib/common/util.hpp>
 #include <gtest/gtest.h>
 
 TEST(CommonTest, EnsureVecSubst)
@@ -18,7 +19,8 @@ TEST(CommonTest, EnsureVecSubst)
   ASSERT_TRUE(s2 > 0);
 }
 
-TEST(CommonTest, EnsureJoinVecSubst) {
+TEST(CommonTest, EnsureJoinVecSubst)
+{
   std::vector<std::string> vec;
   vec.push_back("hehe");
   vec.push_back("hehe");
@@ -26,6 +28,7 @@ TEST(CommonTest, EnsureJoinVecSubst) {
   vec.push_back("hehe");
   vec.push_back("hehe");
   int s1 = vec.size();
-  std::string vstr = feta::util::join(feta::util::vec_substring(&vec, 2, 4), " ");
+  std::string vstr =
+      feta::util::join(feta::util::vec_substring(&vec, 2, 4), " ");
   ASSERT_EQ(vstr, std::string("hehe hehe"));
 }

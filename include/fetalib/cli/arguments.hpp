@@ -1,9 +1,9 @@
 #pragma once
 
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <optional>
 
 #include "fetalib/cli/fetalib_export.hpp"
 #include "fetalib/common/util.hpp"
@@ -22,12 +22,42 @@ struct FETALIB_EXPORT Argument
   bool is_flag;
   bool is_optional;
   int word_count;
-  Argument withKey(std::string key) { Argument a = *this; a.key = key; return a; };
-  Argument withAlternateKey(std::string alt_key) { Argument a = *this; a.alternate_key = alt_key; return a; };
-  Argument withHelpMessage(std::string message) { Argument a = *this; a.help_message = message; return a; };
-  Argument withWordCount(int count) { Argument a = *this; a.word_count = count; return a; }
-  Argument withFlag(bool is_flag = true) { Argument a = *this; a.is_flag = is_flag; return a; };
-  Argument withOptional(bool is_opt = true) { Argument a = *this; a.is_optional = is_opt; return a; }
+  Argument withKey(std::string key)
+  {
+    Argument a = *this;
+    a.key = key;
+    return a;
+  };
+  Argument withAlternateKey(std::string alt_key)
+  {
+    Argument a = *this;
+    a.alternate_key = alt_key;
+    return a;
+  };
+  Argument withHelpMessage(std::string message)
+  {
+    Argument a = *this;
+    a.help_message = message;
+    return a;
+  };
+  Argument withWordCount(int count)
+  {
+    Argument a = *this;
+    a.word_count = count;
+    return a;
+  }
+  Argument withFlag(bool is_flag = true)
+  {
+    Argument a = *this;
+    a.is_flag = is_flag;
+    return a;
+  };
+  Argument withOptional(bool is_opt = true)
+  {
+    Argument a = *this;
+    a.is_optional = is_opt;
+    return a;
+  }
 };
 
 template<typename T>
@@ -38,7 +68,8 @@ struct FETALIB_EXPORT identity
 
 }  // namespace detail
 
-static detail::Argument get_blank_argument() {
+static detail::Argument get_blank_argument()
+{
   return feta::detail::Argument {"", "", "", false, false, 1};
 }
 
@@ -86,8 +117,8 @@ private:
     throw std::invalid_argument(
         "unknown return value for fetalib::ArgumentParser::get.");
   }
-  std::optional<std::vector<std::string>> get(detail::Argument arg,
-                               detail::identity<std::vector<std::string>>)
+  std::optional<std::vector<std::string>> get(
+      detail::Argument arg, detail::identity<std::vector<std::string>>)
   {
     for (int i = 0; i < get_argv()->size(); i++) {
       if ((std::string(get_argv()->at(i)) == std::string(arg.key))
@@ -106,23 +137,27 @@ private:
 
     throw std::invalid_argument("no value given for argument.");
   }
-  std::optional<std::string> get(detail::Argument arg, detail::identity<std::string>)
+  std::optional<std::string> get(detail::Argument arg,
+                                 detail::identity<std::string>)
   {
     if (auto ss = get(arg, detail::identity<std::vector<std::string>>()))
       return util::join(ss.value(), " ");
-    else return std::nullopt;
+    else
+      return std::nullopt;
   }
   std::optional<int> get(detail::Argument arg, detail::identity<int>)
   {
     if (auto s = get(arg, detail::identity<std::string>()))
       return std::stoi(s.value());
-    else return std::nullopt;
+    else
+      return std::nullopt;
   }
   std::optional<float> get(detail::Argument arg, detail::identity<float>)
   {
     if (auto s = get(arg, detail::identity<std::string>()))
       return std::stof(s.value());
-    else return std::nullopt;
+    else
+      return std::nullopt;
   }
   std::optional<bool> get(detail::Argument arg, detail::identity<bool>)
   {
@@ -142,7 +177,7 @@ private:
 
     /* throw std::invalid_argument("no value given for argument."); */
     if (arg.is_flag)
-        return false;
+      return false;
     return std::nullopt;
   }
 };

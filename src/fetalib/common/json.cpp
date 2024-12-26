@@ -33,7 +33,7 @@ std::string JsonReader::read_l1_entry(std::string key)
 std::vector<std::string> JsonReader::get_keys()
 {
   if (!std::filesystem::exists(_file_name))
-    throw std::invalid_argument("recieved non-existant file path.");
+    throw std::invalid_argument("received non-existent file path.");
   std::ifstream file(_file_name);
   std::vector<std::string> keys;
   if (file.is_open()) {

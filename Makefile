@@ -78,7 +78,7 @@ install: uninstall
 	echo "installing config files..."
 	mkdir -p $(P_PATH_CONFIG_DIR)
 	cp -r $(CONFIG_DIR)/* $(P_PATH_CONFIG_DIR) 2>/dev/null || :
-	echo "removing unnessesary path directories..."
+	echo "removing unnecessary path directories..."
 	rmdir $(P_PATH_LIB_DIR) 2>/dev/null || :
 	rmdir $(P_PATH_CONFIG_DIR) 2>/dev/null || :
 	echo "done!"

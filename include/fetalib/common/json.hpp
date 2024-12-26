@@ -1,9 +1,9 @@
 #pragma once
 
+#include <filesystem>
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
-#include <filesystem>
 
 #include "fetalib/common/fetalib_export.hpp"
 
@@ -21,7 +21,6 @@ public:
 
 private:
   std::string _file_name;
-
 };
 
-}
+}  // namespace feta
