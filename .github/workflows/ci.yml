@@ -35,9 +35,6 @@ jobs:
     - name: Lint
       run: cmake -D FORMAT_COMMAND=clang-format-14 -D FIX=YES -P cmake/lint.cmake
 
-    - name: Spell check
-      run: cmake -D FIX=YES -P cmake/spell.cmake
-
     - name: Commit
       continue-on-error: true
       id: commit
