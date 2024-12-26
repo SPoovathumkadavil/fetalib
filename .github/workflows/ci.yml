@@ -29,6 +29,21 @@ jobs:
       if: always()
       run: cmake -D FIX=YES -P cmake/spell.cmake
 
+    - name: Commit
+      continue-on-error: true
+      id: commit
+      run: |
+        git config --global user.name "Sal"
+        git config --global user.email "spoovathumkadavil16@claytonschools.net"
+        git add .
+        git commit -m "[clean push] '${{ github.event.head_commit.message }}'"
+    
+    - name: Push
+      if: ${{ steps.commit.outcome == 'success' }}
+      run: |
+        git push
+        return 1
+    
   coverage:
     needs: [lint]
 
