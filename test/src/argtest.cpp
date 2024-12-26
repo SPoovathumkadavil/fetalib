@@ -5,7 +5,7 @@
 #include <fetalib/cli/arguments.hpp>
 #include <fetalib/common/util.hpp>
 #include <gtest/gtest.h>
-#include <studio.h>
+#include <stdio.h>
 
 TEST(ArgTest, EnsureSimpleArgFind)
 {
