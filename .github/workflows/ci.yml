@@ -15,7 +15,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-      with: { GITHUB_TOKEN: secrets.PAT, persist-credentials: false }
+      with: { persist-credentials: false }
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}
 
     - uses: actions/setup-python@v5
       with: { python-version: "3.12" }
