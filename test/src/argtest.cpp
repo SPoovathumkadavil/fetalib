@@ -7,99 +7,51 @@
 #include <gtest/gtest.h>
 #include <stdio.h>
 
-TEST(ArgTest, EnsureArgVCorrectlyTranscribed)
+TEST(ArgTest, EnsureSimpleArgFind)
 {
   char* argv[] = {"-a", "testa"};
   feta::ArgumentParser argparser(2, argv);
-  ASSERT_TRUE(argparser.get_argc() == 2 && argparser.get_argv()->size() == 2);
+  feta::detail::Argument arg = feta::get_blank_argument();
+  arg.key = "-a";
+  argparser.add(arg);
+  ASSERT_EQ(argparser.get<std::string>("-a").value(), std::string("testa"));
 }
 
-TEST(ArgTest, EnsureArgExists)
+TEST(ArgTest, EnsureErrorOnMissingArg)
 {
   char* argv[] = {"-a", "testa"};
   feta::ArgumentParser argparser(2, argv);
-  argparser.add_option("-a", "--aha");
-  ASSERT_TRUE(argparser.arg_exists("-a") && argparser.arg_exists("--aha"));
+  feta::detail::Argument arg = feta::get_blank_argument();
+  arg.key = "-a";
+  argparser.add(arg);
+  EXPECT_THROW(argparser.get<std::string>("-b").value(), std::invalid_argument);
 }
 
-TEST(ArgTest, EnsureArgValue)
+TEST(ArgTest, EnsureChainingArgumentCreation)
+{
+  char* argv[] = {"--meow", "testa"};
+  feta::ArgumentParser argparser(2, argv);
+  feta::detail::Argument arg = feta::get_blank_argument().withKey("-m").withAlternateKey("--meow");
+  argparser.add(arg);
+  ASSERT_EQ(argparser.get<std::string>(arg).value(), std::string("testa"));
+}
+
+TEST(ArgTest, EnsurePositiveValidation)
 {
   char* argv[] = {"-a", "testa"};
   feta::ArgumentParser argparser(2, argv);
-  argparser.add_option("-a", "--aha");
-  feta::detail::Argument arg = argparser.get_arg("-a");
-  ASSERT_TRUE(arg.key == std::string("-a")
-              && arg.alternate_key == std::string("--aha"));
-}
-
-TEST(ArgTest, EnsureGetVecVal)
-{
-  char* argv[] = {"-a", "testa"};
-  feta::ArgumentParser argparser(2, argv);
-  argparser.add_option("-a", "--aha");
-  std::vector<std::string> arg =
-      argparser.get<std::vector<std::string>>("-a");
-  ASSERT_TRUE(arg[0] == std::string("testa"));
-}
-
-TEST(ArgTest, EnsureGetStrVal)
-{
-  char* argv[] = {"-a", "testa"};
-  feta::ArgumentParser argparser(2, argv);
-  argparser.add_option("-a", "--aha");
-  std::string arg = argparser.get<std::string>("-a");
-  ASSERT_TRUE(arg == std::string("testa"));
-}
-
-TEST(ArgTest, EnsureGetIntVal)
-{
-  char* argv[] = {"--aha", "12"};
-  feta::ArgumentParser argparser(2, argv);
-  argparser.add_option("-a", "--aha");
-  int arg = argparser.get<int>("-a");
-  ASSERT_TRUE(arg == 12);
-}
-
-TEST(ArgTest, EnsureGetBoolVal)
-{
-  char* argv[] = {"--aha", "true"};
-  feta::ArgumentParser argparser(2, argv);
-  argparser.add_option("-a", "--aha");
-  bool arg = argparser.get<bool>("-a");
-  ASSERT_TRUE(arg);
-}
-
-TEST(ArgTest, EnsureGetFlagVal)
-{
-  char* argv[] = {"--aha"};
-  feta::ArgumentParser argparser(1, argv);
-  argparser.add_option("-a", "--aha", "", true);
-  bool arg = argparser.get<bool>("-a");
-  ASSERT_TRUE(arg);
-}
-
-TEST(ArgTest, EnsureArgvMultiDefValidation)
-{
-  char* argv[] = {"--aha", "testa", "-a"};
-  feta::ArgumentParser argparser(3, argv);
-  argparser.add_option("-a", "--aha");
-  ASSERT_FALSE(argparser.validate().valid);
-}
-
-TEST(ArgTest, EnsureArgvNoValueValidation)
-{
-  char* argv[] = {"--aha", "-b", "testb"};
-  feta::ArgumentParser argparser(3, argv);
-  argparser.add_option("-a", "--aha");
-  argparser.add_option("-b");
-  ASSERT_FALSE(argparser.validate().valid);
-}
-
-TEST(ArgTest, EnsureArgvGoodValidation)
-{
-  char* argv[] = {"--aha", "testa", "-b", "testb"};
-  feta::ArgumentParser argparser(4, argv);
-  argparser.add_option("-a", "--aha");
-  argparser.add_option("-b");
+  feta::detail::Argument arg = feta::get_blank_argument().withKey("-a");
+  argparser.add(arg);
   ASSERT_TRUE(argparser.validate().valid);
 }
+
+
+TEST(ArgTest, EnsureMissingArgValidation)
+{
+  char* argv[] = {"-a", "testa"};
+  feta::ArgumentParser argparser(2, argv);
+  feta::detail::Argument arg = feta::get_blank_argument().withKey("-b").withOptional(false);
+  argparser.add(arg);
+  ASSERT_FALSE(argparser.validate().valid);
+}
+

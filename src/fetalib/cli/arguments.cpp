@@ -1,25 +1,8 @@
 
 #include "fetalib/cli/arguments.hpp"
 
-void feta::ArgumentParser::add_option(std::string key,
-                                      std::string alternate_key,
-                                      std::string help_message,
-                                      bool is_flag,
-                                      int word_count)
+void feta::ArgumentParser::add(feta::detail::Argument arg)
 {
-  feta::detail::Argument arg = {
-      key, alternate_key, help_message, is_flag, true, word_count};
-  args.push_back(arg);
-}
-
-void feta::ArgumentParser::add_required(std::string key,
-                                        std::string alternate_key,
-                                        std::string help_message,
-                                        bool is_flag,
-                                        int word_count)
-{
-  feta::detail::Argument arg = {
-      key, alternate_key, help_message, is_flag, false, word_count};
   args.push_back(arg);
 }
 
