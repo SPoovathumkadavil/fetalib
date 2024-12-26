@@ -78,20 +78,8 @@
         <section id="pub-methods">
           <h2><a href="#pub-methods">Public functions</a></h2>
           <dl class="m-doc">
-            <dt id="af47e7a8b62639fa8ff1c1ffccd2cd020">
-              <span class="m-doc-wrap-bumper">void <a href="#af47e7a8b62639fa8ff1c1ffccd2cd020" class="m-doc-self">add_option</a>(</span><span class="m-doc-wrap">std::string key,
-              std::string key_alternate = &quot;&quot;,
-              std::string help_message = &quot;&quot;,
-              bool is_flag = false,
-              int word_count = 1)</span>
-            </dt>
-            <dd><span></span></dd>
-            <dt id="a05bb6cd024944ad68db9432945d888d6">
-              <span class="m-doc-wrap-bumper">void <a href="#a05bb6cd024944ad68db9432945d888d6" class="m-doc-self">add_required</a>(</span><span class="m-doc-wrap">std::string key,
-              std::string key_alternate = &quot;&quot;,
-              std::string help_message = &quot;&quot;,
-              bool is_flag = false,
-              int word_count = 1)</span>
+            <dt id="aaf63ce4cb1d2c3751409f3a89c580f12">
+              <span class="m-doc-wrap-bumper">void <a href="#aaf63ce4cb1d2c3751409f3a89c580f12" class="m-doc-self">add</a>(</span><span class="m-doc-wrap"><a href="structfeta_1_1detail_1_1Argument.html" class="m-doc">detail::<wbr />Argument</a> arg)</span>
             </dt>
             <dd><span></span></dd>
             <dt id="a36f59c085102439a0a8633908c1467a3">
@@ -110,9 +98,14 @@
               <span class="m-doc-wrap-bumper">auto <a href="#af1517dbf510de33b1f3271174077180a" class="m-doc-self">get_arg</a>(</span><span class="m-doc-wrap">std::string key) -&gt; <a href="structfeta_1_1detail_1_1Argument.html" class="m-doc">detail::<wbr />Argument</a></span>
             </dt>
             <dd><span></span></dd>
-            <dt id="ab931d01298f4c4b8b2d824395a889052">
+            <dt id="ae124fda124b2d49e4ab443d1246295af">
               <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#ab931d01298f4c4b8b2d824395a889052" class="m-doc-self">get</a>(</span><span class="m-doc-wrap">std::string key) -&gt; T</span>
+              <span class="m-doc-wrap-bumper">auto <a href="#ae124fda124b2d49e4ab443d1246295af" class="m-doc-self">get</a>(</span><span class="m-doc-wrap">std::string key) -&gt; std::optional&lt;T&gt;</span>
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a073fcd52697056498b906665246b32ca">
+              <div class="m-doc-template">template&lt;typename T&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a073fcd52697056498b906665246b32ca" class="m-doc-self">get</a>(</span><span class="m-doc-wrap"><a href="structfeta_1_1detail_1_1Argument.html" class="m-doc">detail::<wbr />Argument</a> arg) -&gt; std::optional&lt;T&gt;</span>
             </dt>
             <dd><span></span></dd>
             <dt id="a422e0b6e261324be19bb9af0820b5e43">
