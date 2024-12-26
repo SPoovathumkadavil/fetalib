@@ -36,7 +36,6 @@ jobs:
       run: cmake -D FORMAT_COMMAND=clang-format-14 -D FIX=YES -P cmake/lint.cmake
 
     - name: Spell check
-      if: always()
       run: cmake -D FIX=YES -P cmake/spell.cmake
 
     - name: Commit
