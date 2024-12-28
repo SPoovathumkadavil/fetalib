@@ -26,22 +26,32 @@ feta::detail::Argument feta::ArgumentParser::get_arg(std::string key)
   throw std::invalid_argument("argument not found.");
 }
 
+bool feta::ArgumentParser::dependency_check(std::vector<feta::detail::ArgumentDependency> deps) {
+  if (deps.size() == 0) return true;
+  for (feta::detail::ArgumentDependency dep : deps) {
+    for (std::string arg : argv) {
+      if (dep.key == arg) return true;
+    }
+  }
+  return false;
+}
+
 feta::Validation feta::ArgumentParser::validate()
 {
   // ensure all required values accounted for.
   for (feta::detail::Argument arg : args) {
-    if (!arg.is_optional) {
-      bool found = false;
-      for (std::string str : argv) {
-        if (str.find(arg.key) != std::string::npos
-            || str.find(arg.key) != std::string::npos)
-        {
-          found = true;
-        }
+    if (arg.is_optional) continue;
+    if (!dependency_check(argv, arg.dependencies)) continue;
+    bool found = false;
+    for (std::string str : argv) {
+      if (str.find(arg.key) != std::string::npos
+          || str.find(arg.key) != std::string::npos)
+      {
+        found = true;
       }
-      if (!found)
-        return Validation {false, "required argument not found."};
     }
+    if (!found)
+      return Validation {false, "required argument not found."};
   }
 
   // ensure non-flag arg not followed by arg (or vec-end) (no value provided)
@@ -72,3 +82,6 @@ feta::Validation feta::ArgumentParser::validate()
 
   return Validation {true, ""};
 }
+
+std::string 
+

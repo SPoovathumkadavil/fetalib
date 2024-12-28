@@ -14,6 +14,12 @@ namespace feta
 namespace detail
 {
 
+struct FETALIB_EXPORT ArgumentDependency
+{
+  std::string key;
+  std::string help_message;
+};
+
 struct FETALIB_EXPORT Argument
 {
   std::string key;
@@ -22,6 +28,7 @@ struct FETALIB_EXPORT Argument
   bool is_flag;
   bool is_optional;
   int word_count;
+  std::vector<ArgumentDependency> dependencies;
   Argument withKey(std::string key)
   {
     Argument a = *this;
@@ -58,6 +65,12 @@ struct FETALIB_EXPORT Argument
     a.is_optional = is_opt;
     return a;
   }
+  Argument withDependency(ArgumentDependency dep)
+  {
+    Argument a = *this;
+    a.dependencies.push_back(dep);
+    return a;
+  }
 };
 
 template<typename T>
@@ -70,7 +83,7 @@ struct FETALIB_EXPORT identity
 
 static detail::Argument get_blank_argument()
 {
-  return feta::detail::Argument {"", "", "", false, false, 1};
+  return feta::detail::Argument {"", "", "", false, false, 1, std::vector<detail::ArgumentDependency>()};
 }
 
 class FETALIB_EXPORT ArgumentParser
@@ -105,18 +118,15 @@ public:
   }
 
   Validation validate();
+  std::vector<std::string> get_help_strings();
 
 private:
   int argc;
   std::vector<std::string> argv;
   std::vector<detail::Argument> args;
 
-  template<typename T>
-  T get(detail::Argument, detail::identity<T>)
-  {
-    throw std::invalid_argument(
-        "unknown return value for fetalib::ArgumentParser::get.");
-  }
+  dependency_check(std::vector<feta::detail::ArgumentDependency> deps);
+
   std::optional<std::vector<std::string>> get(
       detail::Argument arg, detail::identity<std::vector<std::string>>)
   {
