@@ -41,7 +41,7 @@ feta::Validation feta::ArgumentParser::validate()
   // ensure all required values accounted for.
   for (feta::detail::Argument arg : args) {
     if (arg.is_optional) continue;
-    if (!dependency_check(argv, arg.dependencies)) continue;
+    if (!dependency_check(arg.dependencies)) continue;
     bool found = false;
     for (std::string str : argv) {
       if (str.find(arg.key) != std::string::npos
@@ -83,5 +83,132 @@ feta::Validation feta::ArgumentParser::validate()
   return Validation {true, ""};
 }
 
-std::string 
+std::string feta::ArgumentParser::extract_help_string(detail::Argument arg, int i_tab, int max_chars, int override_out) {
+  std::string ret = "";
+  for (int i = 0; i < i_tab; i++) ret += std::string("\t");
+  ret += arg.key;
+  int i_out = arg.key.length();
+  if (arg.alternate_key != "") {
+    ret += std::string(", ") + arg.alternate_key;
+    i_out += 2 + arg.alternate_key.length();
+  }
+  if (arg.help_message != "") {
+    i_out += 4;
+    if (override_out > -1) {
+      int rem = override_out - i_out; // fixme: am pretending like override out is always greater or eq.
+      for (int i = 0; i < rem; i++) ret += std::string(" ");
+      i_out = override_out;
+    }
+    ret += std::string(" :- ");
+    std::string current_line = "";
+    std::string word = ""; 
+    for (int i = 0; i < arg.help_message.length(); i++) {
+      if (arg.help_message.substr(i, 1) == " ") {
+        if (i_out + current_line.length() + word.length() > max_chars) {
+          current_line += std::string("\n");
+          ret += current_line;
+          for (int i = 0; i < i_tab; i++) ret += std::string("\t");
+          for (int i = 0; i < i_out; i++) ret += std::string(" ");
+          current_line = word;
+          word = "";
+        } else {
+          if (current_line == "") current_line += word;
+          else current_line += std::string(" ") + word;
+          word = "";
+        }
+      } else {
+        word += arg.help_message.substr(i, 1);
+        if (i+1 == arg.help_message.length()) {
+          if (current_line != "") current_line += std::string(" ");
+          current_line += word;
+        }
+      }
+    }
+    ret += current_line;
+  }
+  return ret;
+}
+
+std::string feta::ArgumentParser::extract_help_string(detail::ArgumentDependency arg, int i_tab, int max_chars, int override_out) {
+  std::string ret = "";
+  for (int i = 0; i < i_tab; i++) ret += std::string("\t");
+  ret += arg.key;
+  int i_out = arg.key.length();
+  if (arg.help_message != "") {
+    i_out += 4;
+    if (override_out > -1) {
+      int rem = override_out - i_out; // fixme: am pretending like override out is always greater or eq.
+      for (int i = 0; i < rem; i++) ret += std::string(" ");
+      i_out = override_out;
+    }
+    ret += std::string(" :- ");
+    std::string current_line = "";
+    std::string word = "";
+    for (int i = 0; i < arg.help_message.length(); i++) {
+      if (arg.help_message.substr(i, 1) == " ") {
+        if (i_out + current_line.length() + word.length() > max_chars) {
+          ret += current_line + std::string("\n");
+          for (int i = 0; i < i_tab; i++) ret += std::string("\t");
+          for (int i = 0; i < i_out; i++) ret += std::string(" ");
+          current_line = word;
+          word = "";
+        } else {
+          if (current_line == "") current_line += word;
+          else current_line += std::string(" ") + word;
+          word = "";
+        }
+      } else {
+        word += arg.help_message.substr(i, 1);
+        if (i+1 == arg.help_message.length()) {
+          if (current_line != "") current_line += std::string(" ");
+          current_line += word;
+        }
+      }
+    }
+    ret += current_line;
+  }
+  return ret;
+}
+
+int feta::ArgumentParser::find_largest_hs_offset(std::vector<feta::detail::Argument> args) {
+  int max_off = -1;
+  for (int i = 0; i < args.size(); i++) {
+    int off = args[i].key.length();
+    if (args[i].alternate_key != "") off += 2 + args[i].alternate_key.length(); // "[key], [alternate]"
+    off += 4; // " :- "
+    if (off > max_off) max_off = off;
+  }
+  return max_off;
+}
+
+std::vector<std::string> feta::ArgumentParser::get_help_message(std::string app_name, bool should_align_levels) {
+  // usage: [app_name] [arguments] [command]
+  // arguments:
+  //  ~~ - 
+  //  ~~~~ - 
+  //  ~~ - 
+  //
+  // commands:
+  //  ~~~~~ - 
+  //    -~ - 
+  //  ~~~~~ - 
+  //  ~~~~~ - 
+  //
+  // max of 60 chars in a line
+
+  std::vector<std::string> lines;
+  lines.push_back(std::string("usage: ") + std::string(app_name) + std::string(" [arguments]") + std::string(" [command]"));
+
+  std::vector<feta::detail::Argument> general_args;
+  for (feta::detail::Argument arg : args) {
+    if (arg.dependencies.size() == 0) general_args.push_back(arg);
+  }
+  lines.push_back("general arguments:");
+  int ovr_off = should_align_levels ? find_largest_hs_offset(general_args) : -1;
+  for (feta::detail::Argument arg : general_args) {
+      lines.push_back(extract_help_string(arg, 1, 60, ovr_off));
+  }
+   
+  return lines;
+} 
 

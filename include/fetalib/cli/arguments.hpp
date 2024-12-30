@@ -118,14 +118,18 @@ public:
   }
 
   Validation validate();
-  std::vector<std::string> get_help_strings();
+  std::vector<std::string> get_help_message(std::string app_name, bool should_align_levels = true);
 
 private:
   int argc;
   std::vector<std::string> argv;
   std::vector<detail::Argument> args;
 
-  dependency_check(std::vector<feta::detail::ArgumentDependency> deps);
+  bool dependency_check(std::vector<feta::detail::ArgumentDependency> deps);
+  
+  std::string extract_help_string(detail::Argument arg, int i_tab, int max_chars, int override_out = -1);
+  std::string extract_help_string(detail::ArgumentDependency dep, int i_tab, int max_chars, int override_out = -1);
+  int find_largest_hs_offset(std::vector<detail::Argument> args);
 
   std::optional<std::vector<std::string>> get(
       detail::Argument arg, detail::identity<std::vector<std::string>>)
