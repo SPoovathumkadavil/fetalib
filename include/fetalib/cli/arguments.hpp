@@ -83,7 +83,8 @@ struct FETALIB_EXPORT identity
 
 static detail::Argument get_blank_argument()
 {
-  return feta::detail::Argument {"", "", "", false, false, 1, std::vector<detail::ArgumentDependency>()};
+  return feta::detail::Argument {
+      "", "", "", false, false, 1, std::vector<detail::ArgumentDependency>()};
 }
 
 class FETALIB_EXPORT ArgumentParser
@@ -118,7 +119,8 @@ public:
   }
 
   Validation validate();
-  std::vector<std::string> get_help_message(std::string app_name, bool should_align_levels = true);
+  std::vector<std::string> get_help_message(std::string app_name,
+                                            bool should_align_levels = true);
 
 private:
   int argc;
@@ -126,9 +128,15 @@ private:
   std::vector<detail::Argument> args;
 
   bool dependency_check(std::vector<feta::detail::ArgumentDependency> deps);
-  
-  std::string extract_help_string(detail::Argument arg, int i_tab, int max_chars, int override_out = -1);
-  std::string extract_help_string(detail::ArgumentDependency dep, int i_tab, int max_chars, int override_out = -1);
+
+  std::string extract_help_string(detail::Argument arg,
+                                  int i_tab,
+                                  int max_chars,
+                                  int override_out = -1);
+  std::string extract_help_string(detail::ArgumentDependency dep,
+                                  int i_tab,
+                                  int max_chars,
+                                  int override_out = -1);
   int find_largest_hs_offset(std::vector<detail::Argument> args);
 
   std::optional<std::vector<std::string>> get(
