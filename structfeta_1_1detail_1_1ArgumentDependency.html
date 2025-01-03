@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>feta::ArgumentParser class | fetalib</title>
+  <title>feta::detail::ArgumentDependency struct | fetalib</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="favicon-dark.png" type="image/png" />
@@ -49,7 +49,7 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          <span class="m-breadcrumb"><a href="namespacefeta.html">feta</a>::<wbr/></span>ArgumentParser <span class="m-thin">class</span>
+          <span class="m-breadcrumb"><a href="namespacefeta.html">feta</a>::<wbr/></span><span class="m-breadcrumb"><a href="namespacefeta_1_1detail.html">detail</a>::<wbr/></span>ArgumentDependency <span class="m-thin">struct</span>
           <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="arguments_8hpp.html">&lt;arguments.hpp&gt;</a></div>
         </h1>
         <p><span></span></p>
@@ -59,62 +59,20 @@
             <li>
               Reference
               <ul>
-                <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
-                <li><a href="#pub-methods">Public functions</a></li>
+                <li><a href="#pub-attribs">Public variables</a></li>
               </ul>
             </li>
           </ul>
         </div>
-        <section id="typeless-methods">
-          <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
+        <section id="pub-attribs">
+          <h2><a href="#pub-attribs">Public variables</a></h2>
           <dl class="m-doc">
-            <dt id="ac08834f4ed845f568b84b3430161a152">
-              <span class="m-doc-wrap-bumper"><a href="#ac08834f4ed845f568b84b3430161a152" class="m-doc-self">ArgumentParser</a>(</span><span class="m-doc-wrap">int argc,
-              char** argv)</span>
+            <dt id="a3c54d4c825e3d0f2edb0ab8fac8006db">
+              std::string <a href="#a3c54d4c825e3d0f2edb0ab8fac8006db" class="m-doc-self">key</a>
             </dt>
             <dd><span></span></dd>
-          </dl>
-        </section>
-        <section id="pub-methods">
-          <h2><a href="#pub-methods">Public functions</a></h2>
-          <dl class="m-doc">
-            <dt id="aaf63ce4cb1d2c3751409f3a89c580f12">
-              <span class="m-doc-wrap-bumper">void <a href="#aaf63ce4cb1d2c3751409f3a89c580f12" class="m-doc-self">add</a>(</span><span class="m-doc-wrap"><a href="structfeta_1_1detail_1_1Argument.html" class="m-doc">detail::<wbr />Argument</a> arg)</span>
-            </dt>
-            <dd><span></span></dd>
-            <dt id="a36f59c085102439a0a8633908c1467a3">
-              <span class="m-doc-wrap-bumper">auto <a href="#a36f59c085102439a0a8633908c1467a3" class="m-doc-self">get_argc</a>(</span><span class="m-doc-wrap">) -&gt; int</span>
-            </dt>
-            <dd><span></span></dd>
-            <dt id="ae901965606d13e6742db1e9752c3daff">
-              <span class="m-doc-wrap-bumper">auto <a href="#ae901965606d13e6742db1e9752c3daff" class="m-doc-self">get_argv</a>(</span><span class="m-doc-wrap">) -&gt; std::vector&lt;std::string&gt;*</span>
-            </dt>
-            <dd><span></span></dd>
-            <dt id="a02f4b39858ce8fa5b794551382f52552">
-              <span class="m-doc-wrap-bumper">auto <a href="#a02f4b39858ce8fa5b794551382f52552" class="m-doc-self">arg_exists</a>(</span><span class="m-doc-wrap">std::string key) -&gt; bool</span>
-            </dt>
-            <dd><span></span></dd>
-            <dt id="af1517dbf510de33b1f3271174077180a">
-              <span class="m-doc-wrap-bumper">auto <a href="#af1517dbf510de33b1f3271174077180a" class="m-doc-self">get_arg</a>(</span><span class="m-doc-wrap">std::string key) -&gt; <a href="structfeta_1_1detail_1_1Argument.html" class="m-doc">detail::<wbr />Argument</a></span>
-            </dt>
-            <dd><span></span></dd>
-            <dt id="ae124fda124b2d49e4ab443d1246295af">
-              <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#ae124fda124b2d49e4ab443d1246295af" class="m-doc-self">get</a>(</span><span class="m-doc-wrap">std::string key) -&gt; std::optional&lt;T&gt;</span>
-            </dt>
-            <dd><span></span></dd>
-            <dt id="a073fcd52697056498b906665246b32ca">
-              <div class="m-doc-template">template&lt;typename T&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a073fcd52697056498b906665246b32ca" class="m-doc-self">get</a>(</span><span class="m-doc-wrap"><a href="structfeta_1_1detail_1_1Argument.html" class="m-doc">detail::<wbr />Argument</a> arg) -&gt; std::optional&lt;T&gt;</span>
-            </dt>
-            <dd><span></span></dd>
-            <dt id="a422e0b6e261324be19bb9af0820b5e43">
-              <span class="m-doc-wrap-bumper">auto <a href="#a422e0b6e261324be19bb9af0820b5e43" class="m-doc-self">validate</a>(</span><span class="m-doc-wrap">) -&gt; <a href="structfeta_1_1Validation.html" class="m-doc">Validation</a></span>
-            </dt>
-            <dd><span></span></dd>
-            <dt id="aa0b9d922062c86a8d28f05b5f06f73c7">
-              <span class="m-doc-wrap-bumper">auto <a href="#aa0b9d922062c86a8d28f05b5f06f73c7" class="m-doc-self">get_help_message</a>(</span><span class="m-doc-wrap">std::string app_name,
-              bool should_align_levels = true) -&gt; std::vector&lt;std::string&gt;</span>
+            <dt id="a38f5304ae23d7ef42fb6b0deca1a3d1a">
+              std::string <a href="#a38f5304ae23d7ef42fb6b0deca1a3d1a" class="m-doc-self">help_message</a>
             </dt>
             <dd><span></span></dd>
           </dl>
