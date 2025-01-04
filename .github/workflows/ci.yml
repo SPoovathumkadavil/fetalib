@@ -126,7 +126,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-14, ubuntu-22.04]
+        os: [macos-14]
 
         type: [shared, static]
 
