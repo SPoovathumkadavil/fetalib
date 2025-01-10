@@ -172,7 +172,7 @@ std::string feta::ArgumentParser::extract_help_string(detail::ArgumentDependency
   return ret;
 }
 
-int feta::ArgumentParser::find_largest_hs_offset(std::vector<feta::detail::Argument> args) {
+int feta::ArgumentParser::get_largest_b_off(std::vector<feta::detail::Argument> args) {
   int max_off = -1;
   for (int i = 0; i < args.size(); i++) {
     int off = args[i].key.length();
@@ -210,7 +210,7 @@ std::vector<std::string> feta::ArgumentParser::get_help_message(std::string app_
   }
   if (general_args.size() > 0) {
     lines.push_back("general arguments:");
-    int ovr_off = should_align_levels ? find_largest_hs_offset(general_args) : -1;
+    int ovr_off = should_align_levels ? get_largest_b_off(general_args) : -1;
     for (feta::detail::Argument arg : general_args) {
       lines.push_back(extract_help_string(arg, 2, max_char_width, ovr_off));
     }
@@ -232,8 +232,8 @@ std::vector<std::string> feta::ArgumentParser::get_help_message(std::string app_
   lines.push_back("commands:");
   for (const auto& pair : c_map) {
     lines.push_back(extract_help_string(pair.first, 0, max_char_width, -1));
-    int ovr_off = should_align_levels ? find_largest_hs_offset(pair.second) : -1;
-    int a_off = pair.first.key.length() + 4;  // fixme: tmp
+    int ovr_off = should_align_levels ? get_largest_b_off(pair.second) : -1;
+    int a_off = pair.first.key.length() + 4 + 2;  // fixme: tmp
     for (feta::detail::Argument arg : pair.second) {
       lines.push_back("");
       lines.push_back(extract_help_string(arg, a_off, max_char_width, ovr_off));

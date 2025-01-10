@@ -138,7 +138,7 @@ public:
   }
 
   Validation validate();
-  std::vector<std::string> get_help_message(std::string app_name, bool should_align_levels = true, int max_char_width = 60);
+  std::vector<std::string> get_help_message(std::string app_name, bool should_align_levels = true, int max_char_width = 80);
 
 private:
   int argc;
@@ -149,7 +149,7 @@ private:
   
   std::string extract_help_string(detail::Argument arg, int a_off, int max_char_width, int ovr_b_off = -1);
   std::string extract_help_string(detail::ArgumentDependency dep, int a_off, int max_char_width, int ovr_b_off = -1);
-  int find_largest_hs_offset(std::vector<detail::Argument> args);
+  int get_largest_b_off(std::vector<detail::Argument> args);
 
   std::optional<std::vector<std::string>> get(
       detail::Argument arg, detail::identity<std::vector<std::string>>)
