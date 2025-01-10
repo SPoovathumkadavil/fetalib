@@ -65,7 +65,8 @@ TEST(ArgTest, EnsureArgPrinting)
         .withHelpMessage("heelo this is a very long help string that I am trying to write to intentionally make it long for the sake of things.");
   feta::detail::Argument arg2 =
       feta::get_blank_argument().withKey("-b").withOptional(false)
-        .withHelpMessage("heelo this is another a very long help string that I am trying to write to intentionally make it long for the sake of things.");
+        .withHelpMessage("heelo this is another a very long help string that I am trying to write to intentionally make it long for the sake of things.")
+        .withDependency(feta::detail::ArgumentDependency{"help_me_please", "this is another long kinda long message like i thought. now i will make it even longer because i want to see if it works."});
   argparser.add(arg);
   argparser.add(arg2);
   std::vector<std::string> strs = argparser.get_help_message("test_app", true);

@@ -1,5 +1,6 @@
 
 #include "fetalib/cli/arguments.hpp"
+#include <map>
 
 void feta::ArgumentParser::add(feta::detail::Argument arg)
 {
@@ -83,9 +84,9 @@ feta::Validation feta::ArgumentParser::validate()
   return Validation {true, ""};
 }
 
-std::string feta::ArgumentParser::extract_help_string(detail::Argument arg, int i_tab, int max_chars, int override_out) {
+std::string feta::ArgumentParser::extract_help_string(detail::Argument arg, int i_spaces, int max_chars, int override_out) {
   std::string ret = "";
-  for (int i = 0; i < i_tab; i++) ret += std::string("\t");
+  for (int i = 0; i < i_spaces; i++) ret += std::string(" ");
   ret += arg.key;
   int i_out = arg.key.length();
   if (arg.alternate_key != "") {
@@ -107,7 +108,7 @@ std::string feta::ArgumentParser::extract_help_string(detail::Argument arg, int 
         if (i_out + current_line.length() + word.length() > max_chars) {
           current_line += std::string("\n");
           ret += current_line;
-          for (int i = 0; i < i_tab; i++) ret += std::string("\t");
+          for (int i = 0; i < i_spaces; i++) ret += std::string(" ");
           for (int i = 0; i < i_out; i++) ret += std::string(" ");
           current_line = word;
           word = "";
@@ -129,9 +130,9 @@ std::string feta::ArgumentParser::extract_help_string(detail::Argument arg, int 
   return ret;
 }
 
-std::string feta::ArgumentParser::extract_help_string(detail::ArgumentDependency arg, int i_tab, int max_chars, int override_out) {
+std::string feta::ArgumentParser::extract_help_string(detail::ArgumentDependency arg, int i_spaces, int max_chars, int override_out) {
   std::string ret = "";
-  for (int i = 0; i < i_tab; i++) ret += std::string("\t");
+  for (int i = 0; i < i_spaces; i++) ret += std::string(" ");
   ret += arg.key;
   int i_out = arg.key.length();
   if (arg.help_message != "") {
@@ -148,7 +149,7 @@ std::string feta::ArgumentParser::extract_help_string(detail::ArgumentDependency
       if (arg.help_message.substr(i, 1) == " ") {
         if (i_out + current_line.length() + word.length() > max_chars) {
           ret += current_line + std::string("\n");
-          for (int i = 0; i < i_tab; i++) ret += std::string("\t");
+          for (int i = 0; i < i_spaces; i++) ret += std::string(" ");
           for (int i = 0; i < i_out; i++) ret += std::string(" ");
           current_line = word;
           word = "";
@@ -181,7 +182,7 @@ int feta::ArgumentParser::find_largest_hs_offset(std::vector<feta::detail::Argum
   return max_off;
 }
 
-std::vector<std::string> feta::ArgumentParser::get_help_message(std::string app_name, bool should_align_levels) {
+std::vector<std::string> feta::ArgumentParser::get_help_message(std::string app_name, bool should_align_levels, int max_chars) {
   // usage: [app_name] [arguments] [command]
   // arguments:
   //  ~~ - 
@@ -198,17 +199,48 @@ std::vector<std::string> feta::ArgumentParser::get_help_message(std::string app_
 
   std::vector<std::string> lines;
   lines.push_back(std::string("usage: ") + std::string(app_name) + std::string(" [arguments]") + std::string(" [command]"));
+  lines.push_back("");
+
+  // -- gen args --
 
   std::vector<feta::detail::Argument> general_args;
   for (feta::detail::Argument arg : args) {
     if (arg.dependencies.size() == 0) general_args.push_back(arg);
   }
-  lines.push_back("general arguments:");
-  int ovr_off = should_align_levels ? find_largest_hs_offset(general_args) : -1;
-  for (feta::detail::Argument arg : general_args) {
-      lines.push_back(extract_help_string(arg, 1, 60, ovr_off));
+  if (general_args.size() > 0) {
+    lines.push_back("general arguments:");
+    int ovr_off = should_align_levels ? find_largest_hs_offset(general_args) : -1;
+    for (feta::detail::Argument arg : general_args) {
+      lines.push_back(extract_help_string(arg, 2, max_chars, ovr_off));
+    }
+    lines.push_back("");
   }
-   
+
+  // -- command dep args --
+
+  std::unordered_map<detail::ArgumentDependency, std::vector<detail::Argument>> c_map;
+  for (detail::Argument arg : args) {
+    if (arg.dependencies.size() == 0) continue;
+    for (detail::ArgumentDependency dep : arg.dependencies) {
+      if (c_map.find(dep) == c_map.end()) {
+        c_map[dep] = std::vector<detail::Argument>();
+      }
+      c_map[dep].push_back(arg);
+    }
+  }
+  lines.push_back("commands:");
+  for (const auto& pair : c_map) {
+    lines.push_back(extract_help_string(pair.first, 0, max_chars));
+    int ovr_off = should_align_levels ? find_largest_hs_offset(pair.second) : -1;
+    int i_spaces = pair.first.key.length() + 4;
+    for (feta::detail::Argument arg : pair.second) {
+      lines.push_back("");
+      lines.push_back(extract_help_string(arg, i_spaces, max_chars, ovr_off));
+    } 
+  }
+
+  
+  
   return lines;
 } 
 
