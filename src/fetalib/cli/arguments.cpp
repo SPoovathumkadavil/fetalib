@@ -1,6 +1,6 @@
 
 #include "fetalib/cli/arguments.hpp"
-#include <map>
+#include <unordered_map>
 
 void feta::ArgumentParser::add(feta::detail::Argument arg)
 {
