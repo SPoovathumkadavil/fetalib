@@ -57,11 +57,6 @@ init:
 	mkdir -p $(LIB_DIR)
 	echo "done!"
 
-# if install or uninstall is called, check if the directories exist
-ifneq ($(filter install uninstall, $(MAKECMDGOALS)),)
-$(if $(call ReadLoc, bin),,$(error ensure there is a .loc.json file in the home directory. if not run `make loc`))
-endif
-
 # PATH directories, where system wide binaries are stored
 PATH_PREFIX = $(call ReadLoc,library)/libs
 P_PATH_LIB_DIR = $(call ReadLoc,library)/$(LIB)

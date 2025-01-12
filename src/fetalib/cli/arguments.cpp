@@ -106,7 +106,7 @@ std::string feta::ArgumentParser::extract_help_string(detail::Argument arg, int 
     int local_max_char_width = max_char_width-a_off-b_off;
     for (int i = 0; i < arg.help_message.length(); i++) {
       if (arg.help_message.substr(i, 1) == " ") {
-        if (b_off + current_line.length() + word.length() > local_max_char_width) {
+        if (current_line.length() + word.length() > local_max_char_width) {
           current_line += std::string("\n");
           ret += current_line;
           for (int i = 0; i < a_off + b_off; i++) ret += std::string(" ");
@@ -148,7 +148,7 @@ std::string feta::ArgumentParser::extract_help_string(detail::ArgumentDependency
     int local_max_char_width = max_char_width-a_off-b_off;
     for (int i = 0; i < arg.help_message.length(); i++) {
       if (arg.help_message.substr(i, 1) == " ") {
-        if (b_off + current_line.length() + word.length() > local_max_char_width) {
+        if (current_line.length() + word.length() > local_max_char_width) {
           ret += current_line + std::string("\n");
           for (int i = 0; i < a_off; i++) ret += std::string(" ");
           for (int i = 0; i < b_off; i++) ret += std::string(" ");
@@ -233,7 +233,7 @@ std::vector<std::string> feta::ArgumentParser::get_help_message(std::string app_
   for (const auto& pair : c_map) {
     lines.push_back(extract_help_string(pair.first, 0, max_char_width, -1));
     int ovr_off = should_align_levels ? get_largest_b_off(pair.second) : -1;
-    int a_off = pair.first.key.length() + 4 + 2;  // fixme: tmp
+    int a_off = pair.first.key.length() + 4 + 2; // temporary, surely
     for (feta::detail::Argument arg : pair.second) {
       lines.push_back("");
       lines.push_back(extract_help_string(arg, a_off, max_char_width, ovr_off));
