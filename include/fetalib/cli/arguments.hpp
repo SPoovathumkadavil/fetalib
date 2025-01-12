@@ -18,7 +18,8 @@ struct FETALIB_EXPORT ArgumentDependency
 {
   std::string key;
   std::string help_message;
-  bool operator==(const ArgumentDependency& other) const {
+  bool operator==(const ArgumentDependency& other) const
+  {
     return key == other.key;
   }
   ArgumentDependency withKey(std::string key)
@@ -98,7 +99,8 @@ struct FETALIB_EXPORT identity
 
 static detail::Argument get_blank_argument()
 {
-  return feta::detail::Argument {"", "", "", false, false, 1, std::vector<detail::ArgumentDependency>()};
+  return feta::detail::Argument {
+      "", "", "", false, false, 1, std::vector<detail::ArgumentDependency>()};
 }
 
 static detail::ArgumentDependency get_blank_argument_dependency()
@@ -138,7 +140,9 @@ public:
   }
 
   Validation validate();
-  std::vector<std::string> get_help_message(std::string app_name, bool should_align_levels = true, int max_char_width = 80);
+  std::vector<std::string> get_help_message(std::string app_name,
+                                            bool should_align_levels = true,
+                                            int max_char_width = 80);
 
 private:
   int argc;
@@ -146,9 +150,15 @@ private:
   std::vector<detail::Argument> args;
 
   bool dependency_check(std::vector<feta::detail::ArgumentDependency> deps);
-  
-  std::string extract_help_string(detail::Argument arg, int a_off, int max_char_width, int ovr_b_off = -1);
-  std::string extract_help_string(detail::ArgumentDependency dep, int a_off, int max_char_width, int ovr_b_off = -1);
+
+  std::string extract_help_string(detail::Argument arg,
+                                  int a_off,
+                                  int max_char_width,
+                                  int ovr_b_off = -1);
+  std::string extract_help_string(detail::ArgumentDependency dep,
+                                  int a_off,
+                                  int max_char_width,
+                                  int ovr_b_off = -1);
   int get_largest_b_off(std::vector<detail::Argument> args);
 
   std::optional<std::vector<std::string>> get(
@@ -218,13 +228,13 @@ private:
 
 }  // namespace feta
 
-template <>
+template<>
 struct std::hash<feta::detail::ArgumentDependency>
 {
   std::size_t operator()(const feta::detail::ArgumentDependency& k) const
   {
-    using std::size_t;
     using std::hash;
+    using std::size_t;
     using std::string;
 
     return hash<string>()(k.key);
