@@ -127,6 +127,8 @@ public:
   bool arg_exists(std::string key);
   detail::Argument *get_arg(std::string key);
 
+  detail::ArgumentDependency *get_command();
+
   template<typename T>
   std::optional<T> get(std::string key)
   {

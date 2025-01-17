@@ -56,6 +56,32 @@ TEST(ArgTest, EnsureMissingArgValidation)
   ASSERT_FALSE(argparser.validate().valid);
 }
 
+TEST(ArgTest, EnsureGetCommandFunctional)
+{
+  char* argv[] = {"-a", "thing", "help_me_please"};
+  feta::ArgumentParser argparser(3, argv);
+  feta::detail::Argument arg =
+      feta::get_blank_argument()
+          .withKey("-a")
+          .withAlternateKey("--ahah")
+          .withOptional(false)
+          .withHelpMessage(
+              "heelo this is a very long help string that I am trying to write "
+              "to intentionally make it long for the sake of things.");
+  feta::detail::ArgumentDependency dep = {
+      "help_me_please",
+      "this is another long kinda long message like i thought. now i will make "
+      "it even longer because i want to see if it works."};
+  feta::detail::ArgumentDependency dep2 = {
+      "help_me_please2",
+      "this is another long kinda long message like i thought. now i will make "
+      "it even longer because i want to see if it 2works."};
+  argparser.add(&arg);
+  argparser.add(&dep);
+  argparser.add(&dep2);
+  ASSERT_EQ(argparser.get_command(), &dep);
+}
+
 TEST(ArgTest, EnsureArgPrinting)
 {
   char* argv[] = {"-a", "testa"};

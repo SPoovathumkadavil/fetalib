@@ -37,6 +37,14 @@ feta::detail::Argument *feta::ArgumentParser::get_arg(std::string key)
   throw std::invalid_argument("argument not found.");
 }
 
+feta::detail::ArgumentDependency *feta::ArgumentParser::get_command() {
+  for (std::string str : argv) {
+    for (detail::ArgumentDependency *command : commands) {
+      if (str == command->key) return command;
+    }
+  }
+}
+
 bool feta::ArgumentParser::dependency_check(std::vector<feta::detail::ArgumentDependency*> deps) {
   if (deps.size() == 0) return true;
   for (feta::detail::ArgumentDependency *dep : deps) {
