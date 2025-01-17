@@ -14,6 +14,14 @@ namespace feta
 namespace detail
 {
 
+template<typename T>
+struct FETALIB_EXPORT identity
+{
+  typedef T type;
+};
+
+}  // namespace detail
+
 struct Argument;
 
 struct FETALIB_EXPORT ArgumentDependency
@@ -86,24 +94,16 @@ struct FETALIB_EXPORT Argument
   }
 };
 
-template<typename T>
-struct FETALIB_EXPORT identity
+static Argument get_blank_argument()
 {
-  typedef T type;
-};
-
-}  // namespace detail
-
-static detail::Argument get_blank_argument()
-{
-  return feta::detail::Argument {
-      "", "", "", false, false, 1, std::vector<detail::ArgumentDependency*>()};
+  return Argument {
+      "", "", "", false, false, 1, std::vector<ArgumentDependency*>()};
 }
 
-static detail::ArgumentDependency get_blank_argument_dependency()
+static ArgumentDependency get_blank_argument_dependency()
 {
-  return feta::detail::ArgumentDependency {
-      "", "", std::vector<detail::Argument*>()};
+  return ArgumentDependency {
+      "", "", std::vector<Argument*>()};
 }
 
 class FETALIB_EXPORT ArgumentParser
@@ -117,17 +117,17 @@ public:
     }
   }
 
-  void add(detail::ArgumentDependency* command);
-  void add(detail::Argument* argument,
-           detail::ArgumentDependency* command = nullptr);
+  void add(ArgumentDependency* command);
+  void add(Argument* argument,
+           ArgumentDependency* command = nullptr);
 
   int get_argc() { return argc; };
   std::vector<std::string>* get_argv() { return &argv; }
 
   bool arg_exists(std::string key);
-  detail::Argument* get_arg(std::string key);
+  Argument* get_arg(std::string key);
 
-  detail::ArgumentDependency* get_command();
+  ArgumentDependency* get_command();
 
   template<typename T>
   std::optional<T> get(std::string key)
@@ -138,7 +138,7 @@ public:
   }
 
   template<typename T>
-  std::optional<T> get(detail::Argument arg)
+  std::optional<T> get(Argument arg)
   {
     return get(arg, detail::identity<T>());
   }
@@ -151,23 +151,23 @@ public:
 private:
   int argc;
   std::vector<std::string> argv;
-  std::vector<detail::ArgumentDependency*> commands;
-  std::vector<detail::Argument*> args;
+  std::vector<ArgumentDependency*> commands;
+  std::vector<Argument*> args;
 
-  bool dependency_check(std::vector<feta::detail::ArgumentDependency*> deps);
+  bool dependency_check(std::vector<ArgumentDependency*> deps);
 
-  std::string extract_help_string(detail::Argument* arg,
+  std::string extract_help_string(Argument* arg,
                                   int a_off,
                                   int max_char_width,
                                   int ovr_b_off = -1);
-  std::string extract_help_string(detail::ArgumentDependency* dep,
+  std::string extract_help_string(ArgumentDependency* dep,
                                   int a_off,
                                   int max_char_width,
                                   int ovr_b_off = -1);
-  int get_largest_b_off(std::vector<detail::Argument*> args);
+  int get_largest_b_off(std::vector<Argument*> args);
 
   std::optional<std::vector<std::string>> get(
-      detail::Argument arg, detail::identity<std::vector<std::string>>)
+      Argument arg, detail::identity<std::vector<std::string>>)
   {
     for (int i = 0; i < get_argv()->size(); i++) {
       if ((std::string(get_argv()->at(i)) == std::string(arg.key))
@@ -187,7 +187,7 @@ private:
     // throw std::invalid_argument("no value given for argument.");
     return std::nullopt;
   }
-  std::optional<std::string> get(detail::Argument arg,
+  std::optional<std::string> get(Argument arg,
                                  detail::identity<std::string>)
   {
     if (auto ss = get(arg, detail::identity<std::vector<std::string>>()))
@@ -195,21 +195,21 @@ private:
     else
       return std::nullopt;
   }
-  std::optional<int> get(detail::Argument arg, detail::identity<int>)
+  std::optional<int> get(Argument arg, detail::identity<int>)
   {
     if (auto s = get(arg, detail::identity<std::string>()))
       return std::stoi(s.value());
     else
       return std::nullopt;
   }
-  std::optional<float> get(detail::Argument arg, detail::identity<float>)
+  std::optional<float> get(Argument arg, detail::identity<float>)
   {
     if (auto s = get(arg, detail::identity<std::string>()))
       return std::stof(s.value());
     else
       return std::nullopt;
   }
-  std::optional<bool> get(detail::Argument arg, detail::identity<bool>)
+  std::optional<bool> get(Argument arg, detail::identity<bool>)
   {
     for (int i = 0; i < get_argv()->size(); i++) {
       if ((std::string(get_argv()->at(i)) == std::string(arg.key))
@@ -235,9 +235,9 @@ private:
 }  // namespace feta
 
 template<>
-struct std::hash<feta::detail::ArgumentDependency>
+struct std::hash<feta::ArgumentDependency>
 {
-  std::size_t operator()(const feta::detail::ArgumentDependency& k) const
+  std::size_t operator()(const feta::ArgumentDependency& k) const
   {
     using std::hash;
     using std::size_t;

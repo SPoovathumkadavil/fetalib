@@ -11,7 +11,7 @@ TEST(ArgTest, EnsureSimpleArgFind)
 {
   char* argv[] = {"-a", "testa"};
   feta::ArgumentParser argparser(2, argv);
-  feta::detail::Argument arg = feta::get_blank_argument();
+  feta::Argument arg = feta::get_blank_argument();
   arg.key = "-a";
   argparser.add(&arg);
   ASSERT_EQ(argparser.get<std::string>("-a").value(), std::string("testa"));
@@ -21,7 +21,7 @@ TEST(ArgTest, EnsureNulloptOnMissingArg)
 {
   char* argv[] = {"-a", "testa"};
   feta::ArgumentParser argparser(2, argv);
-  feta::detail::Argument arg = feta::get_blank_argument();
+  feta::Argument arg = feta::get_blank_argument();
   arg.key = "-a";
   argparser.add(&arg);
   ASSERT_EQ(argparser.get<std::string>("-b"), std::nullopt);
@@ -31,7 +31,7 @@ TEST(ArgTest, EnsureChainingArgumentCreation)
 {
   char* argv[] = {"--meow", "testa"};
   feta::ArgumentParser argparser(2, argv);
-  feta::detail::Argument arg =
+  feta::Argument arg =
       feta::get_blank_argument().withKey("-m").withAlternateKey("--meow");
   argparser.add(&arg);
   ASSERT_EQ(argparser.get<std::string>(arg).value(), std::string("testa"));
@@ -41,7 +41,7 @@ TEST(ArgTest, EnsurePositiveValidation)
 {
   char* argv[] = {"-a", "testa"};
   feta::ArgumentParser argparser(2, argv);
-  feta::detail::Argument arg = feta::get_blank_argument().withKey("-a");
+  feta::Argument arg = feta::get_blank_argument().withKey("-a");
   argparser.add(&arg);
   ASSERT_TRUE(argparser.validate().valid);
 }
@@ -50,7 +50,7 @@ TEST(ArgTest, EnsureMissingArgValidation)
 {
   char* argv[] = {"-a", "testa"};
   feta::ArgumentParser argparser(2, argv);
-  feta::detail::Argument arg =
+  feta::Argument arg =
       feta::get_blank_argument().withKey("-b").withOptional(false);
   argparser.add(&arg);
   ASSERT_FALSE(argparser.validate().valid);
@@ -60,7 +60,7 @@ TEST(ArgTest, EnsureGetCommandFunctional)
 {
   char* argv[] = {"-a", "thing", "help_me_please"};
   feta::ArgumentParser argparser(3, argv);
-  feta::detail::Argument arg =
+  feta::Argument arg =
       feta::get_blank_argument()
           .withKey("-a")
           .withAlternateKey("--ahah")
@@ -68,11 +68,11 @@ TEST(ArgTest, EnsureGetCommandFunctional)
           .withHelpMessage(
               "heelo this is a very long help string that I am trying to write "
               "to intentionally make it long for the sake of things.");
-  feta::detail::ArgumentDependency dep = {
+  feta::ArgumentDependency dep = {
       "help_me_please",
       "this is another long kinda long message like i thought. now i will make "
       "it even longer because i want to see if it works."};
-  feta::detail::ArgumentDependency dep2 = {
+  feta::ArgumentDependency dep2 = {
       "help_me_please2",
       "this is another long kinda long message like i thought. now i will make "
       "it even longer because i want to see if it 2works."};
@@ -86,7 +86,7 @@ TEST(ArgTest, EnsureArgPrinting)
 {
   char* argv[] = {"-a", "testa"};
   feta::ArgumentParser argparser(2, argv);
-  feta::detail::Argument arg =
+  feta::Argument arg =
       feta::get_blank_argument()
           .withKey("-a")
           .withAlternateKey("--ahah")
@@ -94,18 +94,18 @@ TEST(ArgTest, EnsureArgPrinting)
           .withHelpMessage(
               "heelo this is a very long help string that I am trying to write "
               "to intentionally make it long for the sake of things.");
-  feta::detail::ArgumentDependency dep = {
+  feta::ArgumentDependency dep = {
       "help_me_please",
       "this is another long kinda long message like i thought. now i will make "
       "it even longer because i want to see if it works."};
-  feta::detail::Argument arg2 =
+  feta::Argument arg2 =
       feta::get_blank_argument()
           .withKey("-b")
           .withOptional(false)
           .withHelpMessage(
               "heelo this is another a very long help string that I am trying "
               "to write to intentionally make it long for the sake of things.");
-  feta::detail::Argument arg3 =
+  feta::Argument arg3 =
       feta::get_blank_argument()
           .withKey("-c")
           .withOptional(false)
@@ -113,7 +113,7 @@ TEST(ArgTest, EnsureArgPrinting)
               "heelo this is another another a very long help string that I am "
               "trying to write to intentionally make it long for the sake of "
               "things.");
-  feta::detail::Argument arg4 =
+  feta::Argument arg4 =
       feta::get_blank_argument()
           .withKey("-d")
           .withOptional(false)
