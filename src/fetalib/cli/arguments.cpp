@@ -2,9 +2,17 @@
 #include "fetalib/cli/arguments.hpp"
 #include <unordered_map>
 
-void feta::ArgumentParser::add(feta::detail::Argument arg)
+void feta::ArgumentParser::add(feta::detail::Argument arg, feta::detail::ArgumentDependency *command)
 {
+  if (command != nullptr) {
+    command->arguments.push_back(&arg);
+    arg.dependencies.push_back(command);
+  }
   args.push_back(arg);
+}
+
+void feta::ArgumentParser::add(feta::detail::ArgumentDependency command) {
+  commands.push_back(command);
 }
 
 bool feta::ArgumentParser::arg_exists(std::string key)
@@ -27,11 +35,11 @@ feta::detail::Argument feta::ArgumentParser::get_arg(std::string key)
   throw std::invalid_argument("argument not found.");
 }
 
-bool feta::ArgumentParser::dependency_check(std::vector<feta::detail::ArgumentDependency> deps) {
+bool feta::ArgumentParser::dependency_check(std::vector<feta::detail::ArgumentDependency*> deps) {
   if (deps.size() == 0) return true;
-  for (feta::detail::ArgumentDependency dep : deps) {
+  for (feta::detail::ArgumentDependency *dep : deps) {
     for (std::string arg : argv) {
-      if (dep.key == arg) return true;
+      if (dep->key == arg) return true;
     }
   }
   return false;
@@ -39,14 +47,15 @@ bool feta::ArgumentParser::dependency_check(std::vector<feta::detail::ArgumentDe
 
 feta::Validation feta::ArgumentParser::validate()
 {
+
   // ensure all required values accounted for.
   for (feta::detail::Argument arg : args) {
     if (arg.is_optional) continue;
     if (!dependency_check(arg.dependencies)) continue;
     bool found = false;
     for (std::string str : argv) {
-      if (str.find(arg.key) != std::string::npos
-          || str.find(arg.key) != std::string::npos)
+      if (str == arg.key
+          || str == arg.alternate_key)
       {
         found = true;
       }
@@ -204,14 +213,14 @@ std::vector<std::string> feta::ArgumentParser::get_help_message(std::string app_
 
   // -- gen args --
 
-  std::vector<feta::detail::Argument> general_args;
-  for (feta::detail::Argument arg : args) {
-    if (arg.dependencies.size() == 0) general_args.push_back(arg);
-  }
-  if (general_args.size() > 0) {
+  if (args.size() > 0) {
+    std::vector<detail::Argument> genargs;
+    for (feta::detail::Argument arg : args) {
+      if (arg.dependencies.size() == 0) genargs.push_back(arg);
+    }
     lines.push_back("general arguments:");
-    int ovr_off = should_align_levels ? get_largest_b_off(general_args) : -1;
-    for (feta::detail::Argument arg : general_args) {
+    int ovr_off = should_align_levels ? get_largest_b_off(genargs) : -1;
+    for (feta::detail::Argument arg : genargs) {
       lines.push_back(extract_help_string(arg, 2, max_char_width, ovr_off));
     }
     lines.push_back("");
@@ -219,22 +228,14 @@ std::vector<std::string> feta::ArgumentParser::get_help_message(std::string app_
 
   // -- command dep args --
 
-  std::unordered_map<detail::ArgumentDependency, std::vector<detail::Argument>> c_map;
-  for (detail::Argument arg : args) {
-    if (arg.dependencies.size() == 0) continue;
-    for (detail::ArgumentDependency dep : arg.dependencies) {
-      if (c_map.find(dep) == c_map.end()) {
-        c_map[dep] = std::vector<detail::Argument>();
-      }
-      c_map[dep].push_back(arg);
-    }
-  }
   lines.push_back("commands:");
-  for (const auto& pair : c_map) {
-    lines.push_back(extract_help_string(pair.first, 0, max_char_width, -1));
-    int ovr_off = should_align_levels ? get_largest_b_off(pair.second) : -1;
-    int a_off = pair.first.key.length() + 4 + 2; // temporary, surely
-    for (feta::detail::Argument arg : pair.second) {
+  for (detail::ArgumentDependency command : commands) {
+    lines.push_back(extract_help_string(command, 0, max_char_width, -1));
+    std::vector<detail::Argument> cargs;
+    for (detail::Argument *arg : command.arguments) cargs.push_back(*arg);
+    int ovr_off = should_align_levels ? get_largest_b_off(cargs) : -1;
+    int a_off = command.key.length() + 4 + 2; // temporary, surely
+    for (feta::detail::Argument arg : cargs) {  
       lines.push_back("");
       lines.push_back(extract_help_string(arg, a_off, max_char_width, ovr_off));
     } 

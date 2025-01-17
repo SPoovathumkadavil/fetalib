@@ -14,10 +14,13 @@ namespace feta
 namespace detail
 {
 
+struct Argument;
+
 struct FETALIB_EXPORT ArgumentDependency
 {
   std::string key;
   std::string help_message;
+  std::vector<Argument*> arguments;
   bool operator==(const ArgumentDependency& other) const
   {
     return key == other.key;
@@ -44,7 +47,7 @@ struct FETALIB_EXPORT Argument
   bool is_flag;
   bool is_optional;
   int word_count;
-  std::vector<ArgumentDependency> dependencies;
+  std::vector<ArgumentDependency*> dependencies;
   Argument withKey(std::string key)
   {
     Argument a = *this;
@@ -81,12 +84,6 @@ struct FETALIB_EXPORT Argument
     a.is_optional = is_opt;
     return a;
   }
-  Argument withDependency(ArgumentDependency dep)
-  {
-    Argument a = *this;
-    a.dependencies.push_back(dep);
-    return a;
-  }
 };
 
 template<typename T>
@@ -100,12 +97,12 @@ struct FETALIB_EXPORT identity
 static detail::Argument get_blank_argument()
 {
   return feta::detail::Argument {
-      "", "", "", false, false, 1, std::vector<detail::ArgumentDependency>()};
+      "", "", "", false, false, 1, std::vector<detail::ArgumentDependency*>()};
 }
 
 static detail::ArgumentDependency get_blank_argument_dependency()
 {
-  return feta::detail::ArgumentDependency {"", ""};
+  return feta::detail::ArgumentDependency {"", "", std::vector<detail::Argument*>()};
 }
 
 class FETALIB_EXPORT ArgumentParser
@@ -119,7 +116,8 @@ public:
     }
   }
 
-  void add(detail::Argument arg);
+  void add(detail::ArgumentDependency command);
+  void add(detail::Argument argument, detail::ArgumentDependency *command = nullptr);
 
   int get_argc() { return argc; };
   std::vector<std::string>* get_argv() { return &argv; }
@@ -130,6 +128,7 @@ public:
   template<typename T>
   std::optional<T> get(std::string key)
   {
+    if (!arg_exists(key)) return std::nullopt;
     return get(get_arg(key), detail::identity<T>());
   }
 
@@ -147,9 +146,10 @@ public:
 private:
   int argc;
   std::vector<std::string> argv;
+  std::vector<detail::ArgumentDependency> commands;
   std::vector<detail::Argument> args;
 
-  bool dependency_check(std::vector<feta::detail::ArgumentDependency> deps);
+  bool dependency_check(std::vector<feta::detail::ArgumentDependency*> deps);
 
   std::string extract_help_string(detail::Argument arg,
                                   int a_off,
@@ -179,7 +179,8 @@ private:
       }
     }
 
-    throw std::invalid_argument("no value given for argument.");
+    // throw std::invalid_argument("no value given for argument.");
+    return std::nullopt;
   }
   std::optional<std::string> get(detail::Argument arg,
                                  detail::identity<std::string>)

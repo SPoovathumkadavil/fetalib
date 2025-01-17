@@ -17,14 +17,14 @@ TEST(ArgTest, EnsureSimpleArgFind)
   ASSERT_EQ(argparser.get<std::string>("-a").value(), std::string("testa"));
 }
 
-TEST(ArgTest, EnsureErrorOnMissingArg)
+TEST(ArgTest, EnsureNulloptOnMissingArg)
 {
   char* argv[] = {"-a", "testa"};
   feta::ArgumentParser argparser(2, argv);
   feta::detail::Argument arg = feta::get_blank_argument();
   arg.key = "-a";
   argparser.add(arg);
-  EXPECT_THROW(argparser.get<std::string>("-b").value(), std::invalid_argument);
+  ASSERT_EQ(argparser.get<std::string>("-b"), std::nullopt);
 }
 
 TEST(ArgTest, EnsureChainingArgumentCreation)
@@ -78,8 +78,7 @@ TEST(ArgTest, EnsureArgPrinting)
           .withOptional(false)
           .withHelpMessage(
               "heelo this is another a very long help string that I am trying "
-              "to write to intentionally make it long for the sake of things.")
-          .withDependency(dep);
+              "to write to intentionally make it long for the sake of things.");
   feta::detail::Argument arg3 =
       feta::get_blank_argument()
           .withKey("-c")
@@ -87,11 +86,11 @@ TEST(ArgTest, EnsureArgPrinting)
           .withHelpMessage(
               "heelo this is another another a very long help string that I am "
               "trying to write to intentionally make it long for the sake of "
-              "things.")
-          .withDependency(dep);
+              "things.");
   argparser.add(arg);
-  argparser.add(arg2);
-  argparser.add(arg3);
+  argparser.add(arg2, &dep);
+  argparser.add(arg3, &dep);
+  argparser.add(dep);
   std::vector<std::string> strs = argparser.get_help_message("test_app", true);
   for (int i = 0; i < (int)strs.size(); i++) {
     std::printf("%s\n", strs[i].c_str());
