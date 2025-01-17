@@ -102,7 +102,8 @@ static detail::Argument get_blank_argument()
 
 static detail::ArgumentDependency get_blank_argument_dependency()
 {
-  return feta::detail::ArgumentDependency {"", "", std::vector<detail::Argument*>()};
+  return feta::detail::ArgumentDependency {
+      "", "", std::vector<detail::Argument*>()};
 }
 
 class FETALIB_EXPORT ArgumentParser
@@ -117,7 +118,8 @@ public:
   }
 
   void add(detail::ArgumentDependency command);
-  void add(detail::Argument argument, detail::ArgumentDependency *command = nullptr);
+  void add(detail::Argument argument,
+           detail::ArgumentDependency* command = nullptr);
 
   int get_argc() { return argc; };
   std::vector<std::string>* get_argv() { return &argv; }
@@ -128,7 +130,8 @@ public:
   template<typename T>
   std::optional<T> get(std::string key)
   {
-    if (!arg_exists(key)) return std::nullopt;
+    if (!arg_exists(key))
+      return std::nullopt;
     return get(get_arg(key), detail::identity<T>());
   }
 
