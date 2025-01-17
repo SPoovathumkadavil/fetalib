@@ -102,8 +102,7 @@ static Argument get_blank_argument()
 
 static ArgumentDependency get_blank_argument_dependency()
 {
-  return ArgumentDependency {
-      "", "", std::vector<Argument*>()};
+  return ArgumentDependency {"", "", std::vector<Argument*>()};
 }
 
 class FETALIB_EXPORT ArgumentParser
@@ -118,8 +117,7 @@ public:
   }
 
   void add(ArgumentDependency* command);
-  void add(Argument* argument,
-           ArgumentDependency* command = nullptr);
+  void add(Argument* argument, ArgumentDependency* command = nullptr);
 
   int get_argc() { return argc; };
   std::vector<std::string>* get_argv() { return &argv; }
@@ -187,8 +185,7 @@ private:
     // throw std::invalid_argument("no value given for argument.");
     return std::nullopt;
   }
-  std::optional<std::string> get(Argument arg,
-                                 detail::identity<std::string>)
+  std::optional<std::string> get(Argument arg, detail::identity<std::string>)
   {
     if (auto ss = get(arg, detail::identity<std::vector<std::string>>()))
       return util::join(ss.value(), " ");
