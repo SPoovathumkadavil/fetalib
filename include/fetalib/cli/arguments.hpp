@@ -117,22 +117,22 @@ public:
     }
   }
 
-  void add(detail::ArgumentDependency command);
-  void add(detail::Argument argument,
+  void add(detail::ArgumentDependency *command);
+  void add(detail::Argument *argument,
            detail::ArgumentDependency* command = nullptr);
 
   int get_argc() { return argc; };
   std::vector<std::string>* get_argv() { return &argv; }
 
   bool arg_exists(std::string key);
-  detail::Argument get_arg(std::string key);
+  detail::Argument *get_arg(std::string key);
 
   template<typename T>
   std::optional<T> get(std::string key)
   {
     if (!arg_exists(key))
       return std::nullopt;
-    return get(get_arg(key), detail::identity<T>());
+    return get(*get_arg(key), detail::identity<T>());
   }
 
   template<typename T>
@@ -149,20 +149,20 @@ public:
 private:
   int argc;
   std::vector<std::string> argv;
-  std::vector<detail::ArgumentDependency> commands;
-  std::vector<detail::Argument> args;
+  std::vector<detail::ArgumentDependency*> commands;
+  std::vector<detail::Argument*> args;
 
   bool dependency_check(std::vector<feta::detail::ArgumentDependency*> deps);
 
-  std::string extract_help_string(detail::Argument arg,
+  std::string extract_help_string(detail::Argument *arg,
                                   int a_off,
                                   int max_char_width,
                                   int ovr_b_off = -1);
-  std::string extract_help_string(detail::ArgumentDependency dep,
+  std::string extract_help_string(detail::ArgumentDependency *dep,
                                   int a_off,
                                   int max_char_width,
                                   int ovr_b_off = -1);
-  int get_largest_b_off(std::vector<detail::Argument> args);
+  int get_largest_b_off(std::vector<detail::Argument*> args);
 
   std::optional<std::vector<std::string>> get(
       detail::Argument arg, detail::identity<std::vector<std::string>>)
